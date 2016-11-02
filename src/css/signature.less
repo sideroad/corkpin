@@ -1,0 +1,83 @@
+@import "variables.less";
+
+.signature{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+	align-items: center;
+	background-size: cover;
+}
+
+.lead{
+	position: absolute;
+	color: @gofun;
+	font-size: 2.5em;
+	margin-top: 0;
+	transition-property: font-size, top;
+  transition-duration: 0.4s;
+	top: 35%;
+	width: 80%;
+	text-align: center;
+}
+
+.control {
+	position: absolute;
+	top: 50%;
+	width: 80%;
+	transform: translateY(0%);
+	flex-wrap: wrap;
+	align-items: stretch;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	transition-property: top;
+  transition-duration: 0.4s;
+}
+
+.control div{
+	width: 30%;
+}
+
+/** finding, creating styles */
+.finding .lead,
+.creating .lead{
+	animation: move-to-top 0.4s ease-out;
+	animation-fill-mode: forwards;
+  font-size: 2em;
+  top: 5%;
+}
+
+.finding .control,
+.creating .control{
+	top: 15%;
+	transition-property: top;
+  transition-duration: 0.4s;
+}
+
+.find,
+.create{
+  max-width: 250px;
+}
+
+.finding .find{
+	width: 100%;
+	transition-property: width;
+  transition-duration: 0.4s;
+}
+
+.finding .create,
+.creating .create,
+.creating .find{
+	display: none;
+}
+
+@keyframes move-to-top {
+  0% {
+    font-size: 2.5em;
+    top: 35%;
+  }
+  100% {
+    font-size: 2em;
+    top: 5%;
+  }
+}

@@ -1,0 +1,107 @@
+@import "variables.less";
+
+.photo{
+	background-color: #fff;
+	position: absolute;
+	padding: 10px;
+	overflow: visible;
+	z-index: 1; /* prevent shadows falling behind containers with backgrounds */
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.27), 0 0 40px rgba(0, 0, 0, 0.06) inset;
+}
+
+.photo:before, .photo:after {
+  content: '';
+  z-index: -1;
+  position: absolute;
+  left: 17px;
+  bottom: 15px;
+  transform: skew(-20deg) rotate(-8deg);
+	width: 50%;
+  height: 40%;
+}
+
+.photo:after {
+  left: auto;
+  right: 17px;
+  transform: skew(20deg) rotate(8deg);
+}
+
+
+.dragging {
+	opacity: 0.8;
+}
+
+.image{
+	background-size: cover;
+	background-position: 50%;
+}
+
+.description {
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 3;
+	padding: 10px 0;
+	text-align: center;
+}
+
+.sizing {
+	.top.focus,
+	.bottom.focus,
+	.right.focus,
+	.left.focus {
+		width: 400px;
+		height: 400px;
+	}
+
+	.left.focus {
+		left: -200px;
+	}
+
+	.right.focus {
+		right: -200px;
+	}
+
+	.bottom.focus {
+		bottom: -200px;
+	}
+
+	.top.focus {
+		top: -200px;
+	}
+
+}
+
+.top,
+.right,
+.left,
+.bottom {
+	position: absolute;
+	width: 20px;
+	height: 20px;
+}
+
+.top {
+	top: -10px;
+}
+
+.right {
+	right: -10px;
+}
+
+.left {
+	left: -10px;
+}
+
+.bottom {
+	bottom: -10px;
+}
+
+.top.left,
+.bottom.right {
+	cursor: nwse-resize;
+}
+
+.top.right,
+.bottom.left {
+	cursor: nesw-resize;
+}
