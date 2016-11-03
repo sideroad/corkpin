@@ -76,7 +76,6 @@ const Photo = ({
       }}
       onMouseUp={(evt) => {
         if (sizing) {
-          console.log(width, left, evt.clientX, (width + left) - evt.clientX);
           onSizingEnd({
             id,
             width: (evt.clientX / scale) - left,

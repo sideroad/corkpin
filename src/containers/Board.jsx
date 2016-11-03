@@ -132,8 +132,8 @@ class Board extends Component {
                       (image) => {
                         sizingChange({
                           id: image.id,
-                          width: image.width,
-                          height: image.height
+                          width: image.width + (panX / scale),
+                          height: image.height + (panY / scale)
                         });
                       }
                     }
@@ -143,8 +143,8 @@ class Board extends Component {
                         fetcher.image
                           .update({
                             id: image.id,
-                            width: image.width,
-                            height: image.height
+                            width: image.width + (panX / scale),
+                            height: image.height + (panY / scale)
                           });
                       }
                     }
