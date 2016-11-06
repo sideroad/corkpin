@@ -66,11 +66,12 @@ const Photo = ({
       className={`${styles.bottom} ${styles.right} ${focus === 'bottomright' ? styles.focus : ''}`}
       onMouseDown={() => onSizingStart({ id, focus: 'bottomright' })}
       onMouseMove={(evt) => {
+        console.log(evt.clientX, evt.clientY, scale, left, top);
         if (sizing) {
           onSizing({
             id,
-            width: (evt.clientX / scale) - left,
-            height: (evt.clientY / scale) - top
+            width: (evt.clientX * scale) - (left),
+            height: (evt.clientY / scale) - (top)
           });
         }
       }}
@@ -78,8 +79,8 @@ const Photo = ({
         if (sizing) {
           onSizingEnd({
             id,
-            width: (evt.clientX / scale) - left,
-            height: (evt.clientY / scale) - top
+            width: (evt.clientX * scale) - (left),
+            height: (evt.clientY / scale) - (top)
           });
         }
       }}

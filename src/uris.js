@@ -3,6 +3,7 @@ export default {
     root: '/:lang',
     finding: '/:lang/find',
     creating: '/:lang/create',
-    board: '/:lang/boards/:id'
+    board: '/:lang/boards/:id',
+    privacy: '/:lang/privacy'
   }
 };

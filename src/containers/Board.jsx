@@ -6,17 +6,22 @@ import { sizingStart, sizingChange, sizingEnd, draggingStart, draggingEnd } from
 import Background from '../components/Background';
 import Photo from '../components/Photo';
 
+const MouseWheelHandler = (evt, changeScale) => {
+  evt.preventDefault();
+  changeScale(evt.deltaY);
+};
+
 const styles = require('../css/board.less');
 
 // eslint-disable-next-line react/prefer-stateless-function
 class Board extends Component {
+
   componentDidMount() {
-    const MouseWheelHandler = (evt) => {
-      evt.preventDefault();
-      console.log(this.props.changeScale);
-      this.props.changeScale(evt.deltaY);
-    };
-    document.body.addEventListener('mousewheel', MouseWheelHandler, false);
+    this.MouseWheelHandler = evt => MouseWheelHandler(evt, this.props.changeScale);
+    document.body.addEventListener('mousewheel', this.MouseWheelHandler, false);
+  }
+  componentWillUnmount() {
+    document.body.removeEventListener('mousewheel', this.MouseWheelHandler, false);
   }
 
   render() {
@@ -42,7 +47,7 @@ class Board extends Component {
     return (
       <div className={moving ? styles.grabbing : styles.grab}>
         <Background
-          image={require('../images/woodboard.jpg')}
+          image={require('../images/corkboard.jpg')}
           overflow="hidden"
           onMouseDown={(evt) => {
             if (!images.filter(image => image.sizing || image.dragging).length) {
@@ -110,8 +115,8 @@ class Board extends Component {
                         fetcher.image
                           .update({
                             id: image.id,
-                            x: image.left + (panX / scale),
-                            y: image.top + (panY / scale)
+                            x: image.left + (panX),
+                            y: image.top + (panY)
                           })
                           .then(
                             () => fetcher.image

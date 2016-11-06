@@ -34,10 +34,6 @@
   transition-duration: 0.4s;
 }
 
-.control div{
-	width: 30%;
-}
-
 /** finding, creating styles */
 .finding .lead,
 .creating .lead{
@@ -78,6 +74,18 @@
   }
   100% {
     font-size: 2em;
-    top: 5%;
+    top: 10%;
+  }
+}
+
+@media(max-width: @smart-width) {
+  .lead {
+    top: 20%;
+  }
+  .control{
+    top: 45%;
+  }
+  .control div{
+  	width: 80%;
   }
 }

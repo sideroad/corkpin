@@ -5,6 +5,7 @@ import { stringify } from 'koiki';
 import App from './containers/App';
 import Home from './containers/Home';
 import SelectAlbum from './containers/SelectAlbum';
+import PrivacyPolicy from './containers/PrivacyPolicy';
 import Board from './containers/Board';
 import NotFound from './containers/NotFound';
 import uris from './uris';
@@ -38,6 +39,7 @@ export default (store, cookie) => {
   return (
     <Route path={uris.pages.root} component={App} >
       <IndexRoute component={Home} />
+      <Route path={uris.pages.privacy} component={PrivacyPolicy} />
       <Route path={uris.pages.finding} component={Home} />
       <Route path={uris.pages.creating} component={SelectAlbum} onEnter={getAuth} />
       <Route path={uris.pages.board} component={Board} onEnter={getAuth} />

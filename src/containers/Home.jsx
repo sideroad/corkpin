@@ -3,18 +3,22 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { stringify } from 'koiki';
 import uris from '../uris';
+import Header from '../components/Header';
 import Background from '../components/Background';
 import Signature from '../components/Signature';
+import Footer from '../components/Footer';
+
 import { set as setUser } from '../reducers/user';
 
 const Home = ({ route, push, setUser }, { i18n, lang }) =>
   <div>
+    <Header homeURL={stringify(uris.pages.root, { lang })} />
     <Background image={require('../images/bg.png')} >
       <Signature
         lead={i18n.lead}
         find={i18n.find}
         create={i18n.create}
-        findOnFacebook={i18n.findOnFacebook}
+        findOnFacebook={i18n.find_on_facebook}
         onSubmit={(values) => {
           console.log(values);
         }}
@@ -26,6 +30,7 @@ const Home = ({ route, push, setUser }, { i18n, lang }) =>
         }}
       />
     </Background>
+    <Footer privacyPolicyURL={stringify(uris.pages.privacy, { lang })} />
   </div>;
 
 Home.propTypes = {
