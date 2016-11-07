@@ -1,6 +1,5 @@
 import React from 'react';
 import { Route, IndexRoute } from 'react-router';
-import { stringify } from 'koiki';
 
 import App from './containers/App';
 import Home from './containers/Home';
@@ -9,7 +8,7 @@ import PrivacyPolicy from './containers/PrivacyPolicy';
 import Board from './containers/Board';
 import NotFound from './containers/NotFound';
 import uris from './uris';
-import login from './helpers/login';
+import config from './config';
 import { set } from './reducers/user';
 
 export default (store, cookie) => {
@@ -17,22 +16,22 @@ export default (store, cookie) => {
    * Please keep routes in alphabetical order
    */
   const getAuth = (nextState, replace, cb) => {
-    const user = store.getState().user;
-    if (user.item.id) {
+    console.log(nextState);
+    if (cookie.get('token')) {
+      store.dispatch(set({
+        id: cookie.get('id'),
+        token: cookie.get('token')
+      }));
       cb();
     } else {
-      login(cookie).then(
-        (res) => {
-          console.log(res);
-          store.dispatch(set(res));
-          cb();
-        },
-        (err) => {
-          console.log(err);
-          replace(stringify(uris.pages.root, nextState.params));
-          cb();
-        }
-      );
+      cookie.set('redirect', '/');
+      if (__SERVER__) {
+        replace('/auth/facebook');
+      } else {
+        location.href = `${config.app.base}/auth/facebook`;
+      }
+
+      cb();
     }
   };
 

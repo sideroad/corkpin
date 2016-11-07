@@ -37,7 +37,9 @@
       "command": "node webpack/webpack-dev-server.js",
       "env": {
         "UV_THREADPOOL_SIZE": 100,
-        "NODE_PATH": "./src"
+        "NODE_PATH": "./src",
+        "GLOBAL_HOST": "localhost",
+        "GLOBAL_PORT": "3000"
       }
     },
     "dev": {
@@ -46,7 +48,9 @@
         "NODE_PATH": "./src",
         "NODE_ENV": "development",
         "HOST": "localhost",
-        "PORT": "3000"
+        "PORT": "3000",
+        "GLOBAL_HOST": "localhost",
+        "GLOBAL_PORT": "3000"
       }
     }
   },
@@ -82,6 +86,8 @@
     "less-loader": "^2.2.1",
     "lodash": "^3.10.1",
     "moment": "^2.10.6",
+    "passport": "^0.3.2",
+    "passport-facebook": "^2.1.1",
     "piping": "^0.3.0",
     "pretty-error": "^1.2.0",
     "query-string": "^3.0.0",

@@ -96,14 +96,11 @@ module.exports = {
   },
   plugins: [
     new webpack.IgnorePlugin(/webpack-stats\.json$/),
+    // set global vars
     new webpack.DefinePlugin({
       __CLIENT__: true,
       __SERVER__: false,
       __DEVELOPMENT__: true,
-      __DEVTOOLS__: true  // <-------- DISABLE redux-devtools HERE
-    }),
-    // set global vars
-    new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: '"' + process.env.NODE_ENV + '"',
         GLOBAL_HOST: '"' + process.env.GLOBAL_HOST + '"',

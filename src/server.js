@@ -13,6 +13,9 @@ import uris from './uris';
 import urls from './urls';
 import routes from './routes';
 import reducers from './reducers';
+import passporter from './helpers/passporter';
+
+passporter.setup();
 
 const app = new Express();
 const pretty = new PrettyError();
@@ -24,6 +27,8 @@ app.use(Express.static(path.join(__dirname, '..', 'static')));
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+
+passporter.use(app);
 
 server({
   urls,
