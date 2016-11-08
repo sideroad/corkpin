@@ -5,7 +5,7 @@ import config from '../config';
 
 export default {
 
-  setup: () => {
+  use: (app) => {
     // passport setup Strategy
     passport.serializeUser((user, cb) => {
       cb(null, user);
@@ -23,26 +23,31 @@ export default {
     }, (accessToken, refreshToken, profile, cb) =>
       cb(null, { ...profile, token: accessToken })
     ));
-  },
 
-  use: (app) => {
     app.use(passport.initialize());
     app.use(passport.session());
 
+    // Endpoint to confirm authentication is still in valid
+    app.get('/auth',
+      (req, res, next) => {
+        if (req.isAuthenticated()) {
+          return next();
+        }
+        return res.status(401).json({});
+      }, (req, res) => {
+        res.status(200).json({
+          id: req.user.id,
+          token: req.user.token
+        });
+      });
+
     app.get('/auth/facebook',
-      passport.authenticate('facebook', { scope: ['user_photos'] }));
+      passport.authenticate('facebook', { scope: ['user_photos'], session: true }));
 
     app.get('/auth/facebook/callback',
-      passport.authenticate('facebook', { scope: ['user_photos'], failureRedirect: '/auth/facebook' }),
+      passport.authenticate('facebook', { scope: ['user_photos'], session: true, failureRedirect: '/auth/facebook' }),
       (req, res) => {
-        // Successful authentication, redirect home.
-        const redirect = req.cookies.redirect;
-        res.cookie('token', req.user.token);
-        if (redirect) {
-          res.redirect(redirect);
-        } else {
-          res.redirect('/');
-        }
+        res.redirect(req.cookies.redirect);
       });
   }
 };

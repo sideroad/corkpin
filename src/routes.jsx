@@ -16,22 +16,36 @@ export default (store, cookie) => {
    * Please keep routes in alphabetical order
    */
   const getAuth = (nextState, replace, cb) => {
-    console.log(nextState);
-    if (cookie.get('token')) {
-      store.dispatch(set({
-        id: cookie.get('id'),
-        token: cookie.get('token')
-      }));
+    if (nextState.user && nextState.user.id) {
       cb();
     } else {
-      cookie.set('redirect', '/');
-      if (__SERVER__) {
-        replace('/auth/facebook');
-      } else {
-        location.href = `${config.app.base}/auth/facebook`;
-      }
-
-      cb();
+      fetch(`${config.app.base}/auth`, {
+        mode: 'cors',
+        credentials: 'include',
+        headers: {
+          cookie: `connect.sid=${cookie.get('connect.sid')}`
+        }
+      })
+        .then((res) => {
+          if (res.ok) {
+            return res.json();
+          }
+          cookie.set('redirect', nextState.location.pathname);
+          if (__SERVER__) {
+            replace('/auth/facebook');
+          } else {
+            location.href = `${config.app.base}/auth/facebook`;
+          }
+          cb();
+          throw new Error();
+        })
+        .then((res) => {
+          store.dispatch(set({
+            id: res.id,
+            token: res.token
+          }));
+          cb();
+        });
     }
   };
 

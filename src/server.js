@@ -6,6 +6,7 @@ import http from 'http';
 import { server } from 'koiki';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
+import expressSession from 'express-session';
 import PrettyError from 'pretty-error';
 import 'isomorphic-fetch';
 import config from './config';
@@ -14,8 +15,6 @@ import urls from './urls';
 import routes from './routes';
 import reducers from './reducers';
 import passporter from './helpers/passporter';
-
-passporter.setup();
 
 const app = new Express();
 const pretty = new PrettyError();
@@ -27,6 +26,7 @@ app.use(Express.static(path.join(__dirname, '..', 'static')));
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(expressSession({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
 
 passporter.use(app);
 
