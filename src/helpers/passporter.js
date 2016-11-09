@@ -42,10 +42,10 @@ export default {
       });
 
     app.get('/auth/facebook',
-      passport.authenticate('facebook', { scope: ['user_photos'], session: true }));
+      passport.authenticate('facebook', { scope: ['user_photos', 'user_posts'], session: true }));
 
     app.get('/auth/facebook/callback',
-      passport.authenticate('facebook', { scope: ['user_photos'], session: true, failureRedirect: '/auth/facebook' }),
+      passport.authenticate('facebook', { scope: ['user_photos', 'user_posts'], session: true, failureRedirect: '/auth/facebook' }),
       (req, res) => {
         res.redirect(req.cookies.redirect);
       });
