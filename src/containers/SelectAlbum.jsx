@@ -29,7 +29,7 @@ const SelectAlbum = ({ route, push, albums, params, user }, { i18n, lang, fetche
               ...album,
               id: album.id,
               name: album.name,
-              image: album.images[0] ? album.images[0].source : ''
+              image: album.images[0] ? album.images[0].url : ''
             })
           )
         }
@@ -50,6 +50,8 @@ const SelectAlbum = ({ route, push, albums, params, user }, { i18n, lang, fetche
                     .save({
                       board: item.id,
                       photo: image.id,
+                      name: image.name,
+                      url: image.url,
                       x: 0,
                       y: 0,
                       z: 0,
@@ -57,10 +59,17 @@ const SelectAlbum = ({ route, push, albums, params, user }, { i18n, lang, fetche
                       height: 200
                     }));
                 return Promise.all(promises);
-              },
+              }
+            ).then(
+              () => fetcher.allow
+                .save({
+                  board: item.id,
+                  user: user.id
+                })
+            ).then(
               () => push(stringify(uris.pages.board, { lang, id: item.id }))
             )
-            .then(
+            .catch(
               () => push(stringify(uris.pages.board, { lang, id: item.id }))
             );
         }}

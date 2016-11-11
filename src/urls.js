@@ -1,7 +1,8 @@
 import { normalize } from 'koiki';
 import config from './config';
 
-const base = normalize(`${config.api.host}:${config.api.port}`);
+const base = config.app.base;
+const api = normalize(`${config.api.host}:${config.api.port}`);
 
 export default {
   album: {
@@ -18,7 +19,7 @@ export default {
               name: album.name,
               images: res.data.map(photo => ({
                 id: photo.id,
-                source: photo.images[0].source,
+                url: photo.images[0].source,
                 name: photo.name
               }))
             }))
@@ -31,45 +32,38 @@ export default {
   },
   board: {
     gets: {
-      url: `${base}/apis/board/boards`
+      url: `${api}/apis/board/boards`
     },
     get: {
-      url: `${base}/apis/board/boards/:id`
+      url: `${api}/apis/board/boards/:id`
     },
     save: {
       method: 'POST',
-      url: `${base}/apis/board/boards`
+      url: `${api}/apis/board/boards`
     }
   },
   image: {
     gets: {
-      url: `${base}/apis/board/images`,
-      after: (values, res) => {
-        const token = values.token;
-        const images = res.items;
-        const promises = images.map(image =>
-          fetch(`https://graph.facebook.com/v2.8/${image.photo}?access_token=${token}&fields=source,name`)
-            .then(res => res.json())
-            .then(json => ({
-              ...json,
-              ...image
-            }))
-        );
-        return Promise.all(promises).then(res => ({
-          items: res
-        }));
-      }
+      url: `${base}/api/images`,
+      mode: 'cors',
+      credentials: 'include'
     },
     get: {
-      url: `${base}/apis/board/images/:id`
+      url: `${api}/apis/board/images/:id`
     },
     save: {
       method: 'POST',
-      url: `${base}/apis/board/images`
+      url: `${api}/apis/board/images`
     },
     update: {
       method: 'POST',
-      url: `${base}/apis/board/images/:id`
+      url: `${api}/apis/board/images/:id`
+    }
+  },
+  allow: {
+    save: {
+      method: 'POST',
+      url: `${api}/apis/board/allows`
     }
   }
 };

@@ -35,7 +35,6 @@ class Board extends Component {
       moving,
       panX,
       panY,
-      user,
       sizingStart,
       sizingChange,
       sizingEnd,
@@ -83,7 +82,7 @@ class Board extends Component {
                   <Photo
                     key={image.id}
                     id={image.id}
-                    image={image.source}
+                    image={image.url}
                     description={image.name}
                     width={image.width}
                     height={image.height}
@@ -121,8 +120,7 @@ class Board extends Component {
                           .then(
                             () => fetcher.image
                               .gets({
-                                board: params.id,
-                                token: user.token
+                                board: params.id
                               })
                           );
                       }
@@ -179,8 +177,7 @@ Board.propTypes = {
   pan: PropTypes.func.isRequired,
   panX: PropTypes.number.isRequired,
   panY: PropTypes.number.isRequired,
-  moving: PropTypes.bool.isRequired,
-  user: PropTypes.object.isRequired
+  moving: PropTypes.bool.isRequired
 };
 
 Board.contextTypes = {
@@ -210,10 +207,9 @@ const connected = connect(
 )(Board);
 
 const asynced = asyncConnect([{
-  promise: ({ store: { getState }, helpers: { fetcher }, params }) => {
+  promise: ({ helpers: { fetcher }, params }) => {
     const promises = [];
     const id = params.id;
-    const user = getState().user.item;
 
     promises.push(fetcher.board
       .get({
@@ -222,8 +218,7 @@ const asynced = asyncConnect([{
     );
     promises.push(fetcher.image
       .gets({
-        board: id,
-        token: user.token
+        board: id
       })
     );
     return Promise.all(promises);
