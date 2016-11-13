@@ -43,6 +43,7 @@ const SelectAlbum = ({ route, push, albums, params, user }, { i18n, lang, fetche
               name: item.name,
               user: user.id
             })
+            .catch(() => {})
             .then(
               () => {
                 const promises = item.images.map(image =>
@@ -60,13 +61,15 @@ const SelectAlbum = ({ route, push, albums, params, user }, { i18n, lang, fetche
                     }));
                 return Promise.all(promises);
               }
-            ).then(
+            )
+            .then(
               () => fetcher.allow
                 .save({
                   board: item.id,
                   user: user.id
                 })
-            ).then(
+            )
+            .then(
               () => push(stringify(uris.pages.board, { lang, id: item.id }))
             )
             .catch(

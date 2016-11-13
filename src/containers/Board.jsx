@@ -35,6 +35,7 @@ class Board extends Component {
       moving,
       panX,
       panY,
+      background = 'corkboard',
       sizingStart,
       sizingChange,
       sizingEnd,
@@ -42,11 +43,12 @@ class Board extends Component {
       draggingEnd,
     } = this.props;
     const { fetcher } = this.context;
-    console.log(panX * -1, panY * -1);
+    console.log(background);
+    // ignore import/no-dynamic-require
     return (
       <div className={moving ? styles.grabbing : styles.grab}>
         <Background
-          image={require('../images/corkboard.jpg')}
+          image={`/images/bg-${background}.jpg`}
           overflow="hidden"
           onMouseDown={(evt) => {
             if (!images.filter(image => image.sizing || image.dragging).length) {
@@ -177,6 +179,7 @@ Board.propTypes = {
   pan: PropTypes.func.isRequired,
   panX: PropTypes.number.isRequired,
   panY: PropTypes.number.isRequired,
+  background: PropTypes.string.isRequired,
   moving: PropTypes.bool.isRequired
 };
 
@@ -191,7 +194,8 @@ const connected = connect(
     scale: state.board.scale,
     moving: state.board.moving,
     panX: state.board.panX,
-    panY: state.board.panY
+    panY: state.board.panY,
+    background: state.board.item.background
   }),
   {
     changeScale,
