@@ -48,7 +48,7 @@ class Board extends Component {
     return (
       <div className={moving ? styles.grabbing : styles.grab}>
         <Background
-          image={`/images/bg-${background}.jpg`}
+          image={background}
           overflow="hidden"
           onMouseDown={(evt) => {
             if (!images.filter(image => image.sizing || image.dragging).length) {
