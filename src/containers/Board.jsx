@@ -118,8 +118,9 @@ class Board extends Component {
                         fetcher.image
                           .update({
                             id: image.id,
-                            x: image.left + (panX - defaultX),
-                            y: image.top + (panY - defaultY)
+                            // TODO: scale logic, remove magic number as 10
+                            x: image.left + panX - defaultX + 10,
+                            y: image.top + panY - defaultY - 10
                           })
                           .then(
                             () => fetcher.image
