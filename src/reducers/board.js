@@ -10,6 +10,7 @@ const CHANGE_SCALE = 'board/CHANGE_SCALE';
 const MOVE_START = 'board/MOVE_START';
 const MOVE_END = 'board/MOVE_END';
 const PAN_TO = 'board/PAN_TO';
+const PAN_DEFAULT = 'board/PAN_DEFAULT';
 
 const initialState = {
   scale: 1,
@@ -20,6 +21,8 @@ const initialState = {
   moving: false,
   panX: 0,
   panY: 0,
+  defaultX: 0,
+  defaultY: 0,
   panStartX: 0,
   panStartY: 0
 };
@@ -81,6 +84,12 @@ export default function reducer(state = initialState, action = {}) {
         panX: state.panStartX - action.x,
         panY: state.panStartY - action.y
       };
+    case PAN_DEFAULT:
+      return {
+        ...state,
+        defaultX: action.x,
+        defaultY: action.y
+      };
     case CHANGE_SCALE: {
       const scale = state.scale + (action.delta / 1500);
       return {
@@ -117,6 +126,14 @@ export function moveEnd() {
 export function pan(x, y) {
   return {
     type: PAN_TO,
+    x,
+    y
+  };
+}
+
+export function setDefault(x, y) {
+  return {
+    type: PAN_DEFAULT,
     x,
     y
   };

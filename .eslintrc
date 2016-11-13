@@ -15,7 +15,6 @@
     "import/no-unresolved": 0,
     "import/no-named-as-default": 0,
     "import/no-named-as-default-member": 0,
-    "import/no-dynamic-require": 0,
     "import/extensions": 0,
     // Temporarirly disabled due to a possible bug in babel-eslint (todomvc example)
     "block-scoped-var": 0,

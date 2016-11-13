@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { asyncConnect } from 'redux-connect';
-import { changeScale, moveStart, moveEnd, pan } from '../reducers/board';
+import { changeScale, moveStart, moveEnd, pan, setDefault } from '../reducers/board';
 import { sizingStart, sizingChange, sizingEnd, draggingStart, draggingEnd } from '../reducers/image';
 import Background from '../components/Background';
 import Photo from '../components/Photo';
@@ -19,6 +19,7 @@ class Board extends Component {
   componentDidMount() {
     this.MouseWheelHandler = evt => MouseWheelHandler(evt, this.props.changeScale);
     document.body.addEventListener('mousewheel', this.MouseWheelHandler, false);
+    this.props.setDefault(document.body.clientWidth / 2, document.body.clientHeight / 2);
   }
   componentWillUnmount() {
     document.body.removeEventListener('mousewheel', this.MouseWheelHandler, false);
@@ -35,6 +36,8 @@ class Board extends Component {
       moving,
       panX,
       panY,
+      defaultX,
+      defaultY,
       background = 'corkboard',
       sizingStart,
       sizingChange,
@@ -43,8 +46,7 @@ class Board extends Component {
       draggingEnd,
     } = this.props;
     const { fetcher } = this.context;
-    console.log(background);
-    // ignore import/no-dynamic-require
+
     return (
       <div className={moving ? styles.grabbing : styles.grab}>
         <Background
@@ -76,7 +78,7 @@ class Board extends Component {
             <div
               className={styles.container}
               style={{
-                transform: `translate(${panX * -1}px, ${panY * -1}px)`
+                transform: `translate(${(panX * -1) - (defaultX * -1)}px, ${(panY * -1) - (defaultY * -1)}px)`
               }}
             >
               {
@@ -116,8 +118,8 @@ class Board extends Component {
                         fetcher.image
                           .update({
                             id: image.id,
-                            x: image.left + (panX),
-                            y: image.top + (panY)
+                            x: image.left + (panX - defaultX),
+                            y: image.top + (panY - defaultY)
                           })
                           .then(
                             () => fetcher.image
@@ -137,8 +139,8 @@ class Board extends Component {
                       (image) => {
                         sizingChange({
                           id: image.id,
-                          width: image.width + (panX / scale),
-                          height: image.height + (panY / scale)
+                          width: image.width + (panX - defaultX),
+                          height: image.height + (panY - defaultY)
                         });
                       }
                     }
@@ -148,8 +150,8 @@ class Board extends Component {
                         fetcher.image
                           .update({
                             id: image.id,
-                            width: image.width + (panX / scale),
-                            height: image.height + (panY / scale)
+                            width: image.width + (panX - defaultX),
+                            height: image.height + (panY - defaultY)
                           });
                       }
                     }
@@ -176,9 +178,12 @@ Board.propTypes = {
   sizingEnd: PropTypes.func.isRequired,
   draggingStart: PropTypes.func.isRequired,
   draggingEnd: PropTypes.func.isRequired,
+  setDefault: PropTypes.func.isRequired,
   pan: PropTypes.func.isRequired,
   panX: PropTypes.number.isRequired,
   panY: PropTypes.number.isRequired,
+  defaultX: PropTypes.number.isRequired,
+  defaultY: PropTypes.number.isRequired,
   background: PropTypes.string.isRequired,
   moving: PropTypes.bool.isRequired
 };
@@ -195,6 +200,8 @@ const connected = connect(
     moving: state.board.moving,
     panX: state.board.panX,
     panY: state.board.panY,
+    defaultX: state.board.defaultX,
+    defaultY: state.board.defaultY,
     background: state.board.item.background
   }),
   {
@@ -206,7 +213,8 @@ const connected = connect(
     sizingEnd,
     draggingStart,
     draggingEnd,
-    pan
+    pan,
+    setDefault
   }
 )(Board);
 
