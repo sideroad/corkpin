@@ -41,7 +41,8 @@ const SelectAlbum = ({ route, push, albums, params, user }, { i18n, lang, fetche
             .save({
               album: item.id,
               name: item.name,
-              user: user.id
+              user: user.id,
+              background: '/images/bg-corkboard.jpg'
             })
             .catch(() => {})
             .then(
