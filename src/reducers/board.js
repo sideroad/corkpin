@@ -11,6 +11,9 @@ const MOVE_START = 'board/MOVE_START';
 const MOVE_END = 'board/MOVE_END';
 const PAN_TO = 'board/PAN_TO';
 const PAN_DEFAULT = 'board/PAN_DEFAULT';
+const CONFIG_MODE = 'board/CONFIG_MODE';
+const DISPLAY_MODE = 'board/DISPLAY_MODE';
+const EDIT_MODE = 'board/EDIT_MODE';
 
 const initialState = {
   scale: 1,
@@ -24,7 +27,8 @@ const initialState = {
   defaultX: 0,
   defaultY: 0,
   panStartX: 0,
-  panStartY: 0
+  panStartY: 0,
+  mode: 'display'
 };
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
@@ -97,6 +101,25 @@ export default function reducer(state = initialState, action = {}) {
         scale: scale <= 0 ? 0 : scale
       };
     }
+    case DISPLAY_MODE: {
+      return {
+        ...state,
+        mode: 'display'
+      };
+    }
+    case EDIT_MODE: {
+      return {
+        ...state,
+        mode: 'edit',
+        scale: 1
+      };
+    }
+    case CONFIG_MODE: {
+      return {
+        ...state,
+        mode: 'config'
+      };
+    }
     default:
       return state;
   }
@@ -136,5 +159,22 @@ export function setDefault(x, y) {
     type: PAN_DEFAULT,
     x,
     y
+  };
+}
+
+export function configMode() {
+  return {
+    type: CONFIG_MODE
+  };
+}
+export function editMode() {
+  return {
+    type: EDIT_MODE
+  };
+}
+
+export function displayMode() {
+  return {
+    type: DISPLAY_MODE
   };
 }

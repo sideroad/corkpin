@@ -17,3 +17,43 @@
 .scaller{
 
 }
+
+.edit {
+	bottom: 100px;
+	right: 30px;
+	font-size: 45px;
+}
+
+.config {
+	bottom: 30px;
+	right: 30px;
+	font-size: 50px;
+}
+
+.config,
+.edit {
+	position: absolute;
+	border: none;
+}
+
+.config i,
+.edit i{
+	color: @sumi;
+	opacity: 0.8;
+	transition-property: transform, color;
+	transition-duration: 0.4s;
+}
+
+.config:hover i,
+.edit:hover i{
+	opacity: 1;
+	color: @tsuyukusa;
+	transform: rotateX(360deg);
+}
+
+.edit:hover.editing i,
+.editing i{
+	opacity: 1;
+	color: @tsuyukusa;
+	transform: rotateX(360deg) scale(1.5);
+}

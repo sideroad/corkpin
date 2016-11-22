@@ -1,7 +1,8 @@
 
-const LOAD_START = 'person/LOAD_START';
-const LOAD_SUCCESS = 'person/LOAD_SUCCESS';
-const LOAD_FAIL = 'person/LOAD_FAIL';
+const GETS_START = 'allow/GETS_START';
+const GETS_SUCCESS = 'allow/GETS_SUCCESS';
+const GETS_FAIL = 'allow/GETS_FAIL';
+const DELETE_START = 'allow/DELETE_START';
 
 const initialState = {
   items: [],
@@ -10,24 +11,29 @@ const initialState = {
 };
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
-    case LOAD_START:
+    case GETS_START:
       return {
         ...state,
         loading: true
       };
-    case LOAD_SUCCESS:
+    case GETS_SUCCESS:
       return {
         ...state,
         loading: false,
         loaded: true,
         items: action.res.items
       };
-    case LOAD_FAIL:
+    case GETS_FAIL:
       return {
         ...state,
         loading: false,
         loaded: false,
         error: action.error
+      };
+    case DELETE_START:
+      return {
+        ...state,
+        items: state.items.filter(item => item.id !== action.values.user)
       };
     default:
       return state;

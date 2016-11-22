@@ -1,0 +1,163 @@
+@import "variables.less";
+
+.show {
+	opacity: 1;
+	transform: translateY(0%);
+}
+.hide {
+	opacity: 0;
+	transform: translateY(500%);
+}
+
+.close {
+	position: absolute;
+	bottom: 10px;
+	left: 50%;
+	border: none;
+	font-size: 30px;
+	transform: translateX(-50%);
+}
+
+.close i{
+	color: @sumi;
+	transition-property: transform, color;
+	transition-duration: 0.4s;
+}
+
+.close:hover i{
+	color: @tsuyukusa;
+	transform: rotateX(180deg);
+}
+
+.settings {
+	position: absolute;
+  width: 80%;
+  top: 0;
+  background: @gofun;
+  margin: 10%;
+  border-radius: 3px;
+  box-shadow: @shadow;
+	font-size: 1.5em;
+	color: @shikkoku;
+	transition-property: transform, opacity;
+	transition-duration: 0.4s;
+	padding-bottom: 50px;
+}
+
+.settings dt {
+  width: 80%;
+  margin-top: 20px;
+	margin-left: 10%;
+	margin-right: 10%;
+	margin-bottom: 10px;
+}
+
+.settings dd {
+  width: 80%;
+  margin: 10px 10%;
+	font-size: 0.75em;
+}
+
+.selected {
+	display: flex;
+	align-items: center;
+	border: 2px solid @shironezu;
+	border-radius: 3px;
+	padding: 3px 10px;
+	transition-property: background;
+  transition-duration: 0.4s;
+}
+
+.selected:hover {
+	border: 2px solid @sora;
+	background-color: @sora;
+	transition-property: background;
+	transition-duration: 0.2s;
+}
+
+.icon {
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+}
+
+.smallIcon {
+	width: 25px;
+	height: 25px;
+	border-radius: 50%;
+	transform: translateY(0%);
+	transition-property: transform;
+	transition-duration: 0.2s;
+}
+
+.text {
+	font-size: 1.3em;
+  margin-left: 15px;
+	color: @sumi;
+}
+
+.smallText {
+	font-size: 1.1em;
+	margin-left: 5px;
+	color: @sumi;
+	transform: translateY(0%);
+	transition-property: transform;
+	transition-duration: 0.2s;
+}
+
+.allowedUserIcon {
+	margin-left: 10px;
+}
+
+.allowedUsers {
+	margin-top: 10px;
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.allowedUser {
+	position: relative;
+	display: flex;
+	align-items: center;
+	border: none;
+	margin: 5px;
+	overflow: hidden;
+}
+
+.allowedUser:hover .smallIcon,
+.allowedUser:hover .smallText{
+	transform: translateY(-150%);
+}
+
+.allowedUser:hover .delete {
+	transform: translateY(0%);
+}
+
+
+.delete {
+	background-color: @momohana;
+	position: absolute;
+	top: 0;
+	left: 0;
+	transform: translateY(150%);
+	transition-property: transform;
+	transition-duration: 0.2s;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 3px;
+	opacity: 0.85;
+	color: @gofun;
+}
+
+.deleteText {
+	font-size: 1.1em;
+	margin-left: 5px;
+}
+
+.suggest {
+	width: 100%;
+	background-color: @gofun;
+}

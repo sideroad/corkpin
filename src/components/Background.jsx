@@ -2,10 +2,10 @@ import React, { PropTypes } from 'react';
 
 const styles = require('../css/background.less');
 
-const Background = ({ image, onMouseDown, onMouseUp, onMouseMove, children, overflow }) =>
+const Background = ({ image, onMouseDown, onMouseUp, onMouseMove, children, overflow, blur }) =>
   <div
     style={{ backgroundImage: `url(${image})`, overflow }}
-    className={styles.background}
+    className={`${styles.background} ${blur ? styles.blur : ''}`}
     onMouseDown={(evt) => {
       onMouseDown(evt);
     }}
@@ -25,7 +25,8 @@ Background.propTypes = {
   onMouseDown: PropTypes.func,
   onMouseUp: PropTypes.func,
   onMouseMove: PropTypes.func,
-  overflow: PropTypes.string
+  overflow: PropTypes.string,
+  blur: PropTypes.bool
 };
 
 Background.defaultProps = {

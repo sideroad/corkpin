@@ -1,14 +1,18 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { asyncConnect } from 'redux-connect';
-import { changeScale, moveStart, moveEnd, pan, setDefault } from '../reducers/board';
+import { changeScale, moveStart, moveEnd, pan, setDefault, displayMode, editMode, configMode } from '../reducers/board';
 import { sizingStart, sizingChange, sizingEnd, draggingStart, draggingEnd } from '../reducers/image';
+import { search as searchUser } from '../reducers/user';
 import Background from '../components/Background';
+import Settings from '../components/Settings';
 import Photo from '../components/Photo';
 
-const MouseWheelHandler = (evt, changeScale) => {
+const MouseWheelHandler = (evt, changeScale, mode) => {
   evt.preventDefault();
-  changeScale(evt.deltaY);
+  if (mode === 'display') {
+    changeScale(evt.deltaY);
+  }
 };
 
 const styles = require('../css/board.less');
@@ -17,7 +21,7 @@ const styles = require('../css/board.less');
 class Board extends Component {
 
   componentDidMount() {
-    this.MouseWheelHandler = evt => MouseWheelHandler(evt, this.props.changeScale);
+    this.MouseWheelHandler = evt => MouseWheelHandler(evt, this.props.changeScale, this.props.mode);
     document.body.addEventListener('mousewheel', this.MouseWheelHandler, false);
     this.props.setDefault(document.body.clientWidth / 2, document.body.clientHeight / 2);
   }
@@ -27,6 +31,11 @@ class Board extends Component {
 
   render() {
     const {
+      userId,
+      token,
+      matchedUsers,
+      mode,
+      name,
       images,
       params,
       scale,
@@ -38,19 +47,25 @@ class Board extends Component {
       panY,
       defaultX,
       defaultY,
+      allows,
+      backgrounds,
       background = 'corkboard',
       sizingStart,
       sizingChange,
       sizingEnd,
       draggingStart,
       draggingEnd,
+      searchUser,
+      configMode,
+      displayMode,
+      editMode
     } = this.props;
     const { fetcher } = this.context;
-
     return (
       <div className={moving ? styles.grabbing : styles.grab}>
         <Background
-          image={background}
+          blur={mode === 'config'}
+          image={`/images/bg-${background.id}.jpg`}
           overflow="hidden"
           onMouseDown={(evt) => {
             if (!images.filter(image => image.sizing || image.dragging).length) {
@@ -97,9 +112,13 @@ class Board extends Component {
                     dragging={image.dragging}
                     sizing={image.sizing}
                     focus={image.focus}
+                    editing={mode === 'edit'}
                     onDragStart={
                       (image) => {
                         moveEnd();
+                        if (mode !== 'edit') {
+                          return;
+                        }
                         draggingStart(image);
                         let maxZ = 0;
                         images.forEach((image) => {
@@ -114,6 +133,9 @@ class Board extends Component {
                     }
                     onDragEnd={
                       (image) => {
+                        if (mode !== 'edit') {
+                          return;
+                        }
                         draggingEnd(image);
                         fetcher.image
                           .update({
@@ -133,11 +155,17 @@ class Board extends Component {
                     onSizingStart={
                       (image) => {
                         moveEnd();
+                        if (mode !== 'edit') {
+                          return;
+                        }
                         sizingStart(image);
                       }
                     }
                     onSizing={
                       (image) => {
+                        if (mode !== 'edit') {
+                          return;
+                        }
                         sizingChange({
                           id: image.id,
                           width: image.width + (panX - defaultX),
@@ -147,6 +175,9 @@ class Board extends Component {
                     }
                     onSizingEnd={
                       (image) => {
+                        if (mode !== 'edit') {
+                          return;
+                        }
                         sizingEnd(image);
                         fetcher.image
                           .update({
@@ -162,13 +193,93 @@ class Board extends Component {
             </div>
           </div>
         </Background>
+        <button
+          className={`${styles.edit} ${mode === 'edit' ? styles.editing : ''}`}
+          onClick={
+            () => {
+              if (mode === 'edit') {
+                displayMode();
+              } else {
+                editMode();
+              }
+            }
+          }
+        >
+          <i className="fa fa-paint-brush" />
+        </button>
+        <button
+          className={styles.config}
+          onClick={
+            () => configMode()
+          }
+        >
+          <i className="fa fa-cog" />
+        </button>
+        <Settings
+          userId={userId}
+          display={mode === 'config'}
+          name={name}
+          background={background}
+          backgrounds={backgrounds}
+          allows={allows}
+          users={matchedUsers}
+          onSearchUser={
+            query => searchUser(query)
+          }
+          onChangeBoardName={
+            name => fetcher.board
+              .update({
+                id: params.id,
+                name
+              })
+              .then(
+                () => fetcher.board.get({
+                  id: params.id
+                })
+              )
+          }
+          onAddUser={
+            user => fetcher.allow
+              .save({
+                board: params.id,
+                user
+              })
+              .then(
+                () => fetcher.allow.gets({
+                  board: params.id,
+                  access_token: token
+                })
+              )
+          }
+          onDeleteUser={
+            user => fetcher.allow
+              .delete({
+                board: params.id,
+                user
+              })
+              .then(
+                () => fetcher.allow.gets({
+                  board: params.id,
+                  access_token: token
+                })
+              )
+          }
+          onClose={
+            () => displayMode()
+          }
+        />
       </div>
     );
   }
 }
 
 Board.propTypes = {
+  userId: PropTypes.string.isRequired,
+  token: PropTypes.string.isRequired,
+  matchedUsers: PropTypes.array.isRequired,
   images: PropTypes.array.isRequired,
+  backgrounds: PropTypes.array.isRequired,
+  name: PropTypes.string.isRequired,
   scale: PropTypes.number.isRequired,
   params: PropTypes.object.isRequired,
   changeScale: PropTypes.func.isRequired,
@@ -185,8 +296,14 @@ Board.propTypes = {
   panY: PropTypes.number.isRequired,
   defaultX: PropTypes.number.isRequired,
   defaultY: PropTypes.number.isRequired,
-  background: PropTypes.string.isRequired,
-  moving: PropTypes.bool.isRequired
+  background: PropTypes.object.isRequired,
+  moving: PropTypes.bool.isRequired,
+  allows: PropTypes.array.isRequired,
+  searchUser: PropTypes.func.isRequired,
+  mode: PropTypes.string.isRequired,
+  displayMode: PropTypes.func.isRequired,
+  editMode: PropTypes.func.isRequired,
+  configMode: PropTypes.func.isRequired
 };
 
 Board.contextTypes = {
@@ -195,15 +312,23 @@ Board.contextTypes = {
 
 const connected = connect(
   state => ({
-    images: state.image.items,
-    user: state.user.item,
+    mode: state.board.mode,
+    name: state.board.item.name,
     scale: state.board.scale,
     moving: state.board.moving,
     panX: state.board.panX,
     panY: state.board.panY,
     defaultX: state.board.defaultX,
     defaultY: state.board.defaultY,
-    background: state.board.item.background
+    background: state.board.item.background,
+    images: state.image.items,
+    backgrounds: state.background.items,
+    user: state.user.item,
+    token: state.user.item.token,
+    userId: state.user.item.id,
+    users: state.user.items,
+    matchedUsers: state.user.matched,
+    allows: state.allow.items,
   }),
   {
     changeScale,
@@ -215,13 +340,18 @@ const connected = connect(
     draggingStart,
     draggingEnd,
     pan,
-    setDefault
+    setDefault,
+    searchUser,
+    displayMode,
+    editMode,
+    configMode
   }
 )(Board);
 
 const asynced = asyncConnect([{
-  promise: ({ helpers: { fetcher }, params }) => {
+  promise: ({ store: { getState }, helpers: { fetcher }, params }) => {
     const promises = [];
+    const user = getState().user.item;
     const id = params.id;
 
     promises.push(fetcher.board
@@ -233,6 +363,20 @@ const asynced = asyncConnect([{
       .gets({
         board: id
       })
+    );
+    promises.push(fetcher.allow
+      .gets({
+        board: id,
+        access_token: user.token
+      })
+    );
+    promises.push(fetcher.user
+      .gets({
+        access_token: user.token
+      })
+    );
+    promises.push(fetcher.background
+      .gets({})
     );
     return Promise.all(promises);
   }

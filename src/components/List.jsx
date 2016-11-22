@@ -5,13 +5,12 @@ const styles = require('../css/list.less');
 const List = ({ hover, theme, position, items, onClick }) =>
   <ul className={`${styles.list} ${styles[hover]} ${styles[theme]} ${styles[position]}`} >
     {
-      items.map((item, index) =>
+      items.map(item =>
         <li
           key={item.id}
           className={styles.item}
         >
-          <a
-            tabIndex={index}
+          <button
             className={styles.link}
             onClick={(evt) => {
               evt.preventDefault();
@@ -26,7 +25,7 @@ const List = ({ hover, theme, position, items, onClick }) =>
               className={styles.outline}
             />
             <div className={styles.text} >{item.name}</div>
-          </a>
+          </button>
         </li>
       )
     }

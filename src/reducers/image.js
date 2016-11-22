@@ -119,6 +119,8 @@ export default function reducer(state = initialState, action = {}) {
         items: state.items.map(
           item => ({
             ...item,
+            x: item.id === action.item.id && action.item.x ? action.item.x : item.x,
+            y: item.id === action.item.id && action.item.y ? action.item.y : item.y,
             width: item.id === action.item.id && action.item.width ?
                    action.item.width : item.width,
             height: item.id === action.item.id && action.item.height ?

@@ -14,6 +14,7 @@ const Photo = ({
   height,
   description,
   dragging,
+  editing,
   scale,
   onSizingStart,
   onSizing,
@@ -22,13 +23,13 @@ const Photo = ({
   focus
 }) =>
   <div
-    className={`${styles.photo} ${dragging ? styles.dragging : ''} ${sizing ? styles.sizing : ''}`}
+    className={`${styles.photo} ${dragging ? styles.dragging : ''} ${sizing ? styles.sizing : ''} ${editing ? styles.editing : ''}`}
     style={{
       top: `${top}px`,
       left: `${left}px`,
       zIndex: `${zIndex}`
     }}
-    draggable={!sizing}
+    draggable={!sizing && editing}
     onDragStart={() => {
       if (!sizing) {
         onDragStart({ id });
@@ -62,39 +63,53 @@ const Photo = ({
       >
         {description}
       </div> : ''}
-    <div
-      className={`${styles.bottom} ${styles.right} ${focus === 'bottomright' ? styles.focus : ''}`}
-      onMouseDown={() => onSizingStart({ id, focus: 'bottomright' })}
-      onMouseMove={(evt) => {
-        console.log(evt.clientX, evt.clientY, scale, left, top);
-        if (sizing) {
-          onSizing({
-            id,
-            width: (evt.clientX * scale) - (left),
-            height: (evt.clientY / scale) - (top)
-          });
-        }
-      }}
-      onMouseUp={(evt) => {
-        if (sizing) {
-          onSizingEnd({
-            id,
-            width: (evt.clientX * scale) - (left),
-            height: (evt.clientY / scale) - (top)
-          });
-        }
-      }}
-    />
-    <div
-      className={`${styles.top} ${styles.right}`}
-    />
-    <div
-      className={`${styles.bottom} ${styles.left}`}
-    />
+    {
+      editing ?
+        <div className={styles.hover}>
+          <i className="fa fa-arrows" />
+        </div>
+        : ''
+    }
+    {
+      editing ?
+        <div
+          className={`${styles.bottom} ${styles.right} ${focus === 'bottomright' ? styles.focus : ''}`}
+          onMouseDown={() => onSizingStart({ id, focus: 'bottomright' })}
+          onMouseMove={(evt) => {
+            if (sizing) {
+              onSizing({
+                id,
+                width: (evt.clientX) - (left),
+                height: (evt.clientY) - (top)
+              });
+            }
+          }}
+          onMouseUp={(evt) => {
+            if (sizing) {
+              onSizingEnd({
+                id,
+                width: (evt.clientX) - (left),
+                height: (evt.clientY) - (top)
+              });
+            }
+          }}
+        /> : ''
+    }
+    {
+      /* TODO: rotate photos
+      <div
+        className={`${styles.top} ${styles.right}`}
+      />
+      <div
+        className={`${styles.bottom} ${styles.left}`}
+      />
+      */
+    }
   </div>;
 
 Photo.propTypes = {
   id: PropTypes.string.isRequired,
+  editing: PropTypes.bool.isRequired,
   image: PropTypes.string.isRequired,
   description: PropTypes.string,
   scale: PropTypes.number.isRequired,

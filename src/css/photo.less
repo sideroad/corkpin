@@ -9,6 +9,30 @@
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.27), 0 0 40px rgba(0, 0, 0, 0.06) inset;
 }
 
+.editing .hover{
+	width: 100%;
+	height: 100%;
+	opacity: 0;
+	position: absolute;
+  top: 0;
+  left: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: @shironezu;
+	background-color: @sumi;
+	transition-property: opacity;
+	transition-duration: 0.4s;
+}
+
+.editing .hover i{
+	font-size: 3em;
+}
+
+.editing .hover:hover {
+	opacity: 0.8;
+}
+
 .photo:before, .photo:after {
   content: '';
   z-index: -1;
@@ -49,24 +73,13 @@
 	.bottom.focus,
 	.right.focus,
 	.left.focus {
-		width: 1000%;
-		height: 1000%;
+		width: 200px;
+		height: 200px;
+		background-color: @tsuyukusa;
 	}
 
-	.left.focus {
-		left: -50%;
-	}
-
-	.right.focus {
-		right: -50%;
-	}
-
-	.bottom.focus {
-		bottom: -50%;
-	}
-
-	.top.focus {
-		top: -50%;
+	.right.bottom.focus {
+		transform: translateX(50%) translateY(50%);
 	}
 
 }
@@ -78,6 +91,11 @@
 	position: absolute;
 	width: 20px;
 	height: 20px;
+	opacity: 0.5;
+	border-radius: 50%;
+	background-color: @shironezu;
+	transition-property: transform, background-color, width, height;
+	transition-duration: 0.4s;
 }
 
 .top {
