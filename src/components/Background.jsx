@@ -2,18 +2,27 @@ import React, { PropTypes } from 'react';
 
 const styles = require('../css/background.less');
 
-const Background = ({ image, onMouseDown, onMouseUp, onMouseMove, children, overflow, blur }) =>
+const Background = ({ image, onMoveStart, onMoveEnd, onMove, children, overflow, blur }) =>
   <div
     style={{ backgroundImage: `url(${image})`, overflow }}
     className={`${styles.background} ${blur ? styles.blur : ''}`}
     onMouseDown={(evt) => {
-      onMouseDown(evt);
+      onMoveStart(evt);
     }}
-    onMouseUp={(evt) => {
-      onMouseUp(evt);
+    onTouchStart={(evt) => {
+      onMoveStart(evt.touches[0]);
     }}
     onMouseMove={(evt) => {
-      onMouseMove(evt);
+      onMove(evt);
+    }}
+    onTouchMove={(evt) => {
+      onMove(evt.touches[0]);
+    }}
+    onMouseUp={(evt) => {
+      onMoveEnd(evt);
+    }}
+    onTouchEnd={(evt) => {
+      onMoveEnd(evt.touches[0]);
     }}
   >
     {children}
@@ -22,17 +31,17 @@ const Background = ({ image, onMouseDown, onMouseUp, onMouseMove, children, over
 Background.propTypes = {
   image: PropTypes.string.isRequired,
   children: PropTypes.oneOfType([PropTypes.object, PropTypes.array]).isRequired,
-  onMouseDown: PropTypes.func,
-  onMouseUp: PropTypes.func,
-  onMouseMove: PropTypes.func,
+  onMoveStart: PropTypes.func,
+  onMove: PropTypes.func,
+  onMoveEnd: PropTypes.func,
   overflow: PropTypes.string,
   blur: PropTypes.bool
 };
 
 Background.defaultProps = {
-  onMouseMove: () => {},
-  onMouseUp: () => {},
-  onMouseDown: () => {},
+  onMoveStart: () => {},
+  onMove: () => {},
+  onMoveEnd: () => {},
   overflow: 'fixed'
 };
 
