@@ -62,28 +62,34 @@ class Board extends Component {
       editMode
     } = this.props;
     const { fetcher } = this.context;
+    const onMoveStart = (evt) => {
+      if (!images.filter(image => image.sizing || image.dragging).length) {
+        moveStart(evt.clientX, evt.clientY);
+      }
+    };
+    const onMove = (evt) => {
+      if (moving && !images.filter(image => image.sizing || image.dragging).length) {
+        pan(evt.clientX, evt.clientY);
+      }
+    };
+    const onMoveEnd = (evt) => {
+      if (moving && !images.filter(image => image.sizing || image.dragging).length) {
+        pan(evt.clientX, evt.clientY);
+      }
+      moveEnd();
+    };
     return (
       <div className={moving ? styles.grabbing : styles.grab}>
         <Background
           blur={mode === 'config'}
           image={`/images/bg-${background.id}.jpg`}
           overflow="hidden"
-          onMouseDown={(evt) => {
-            if (!images.filter(image => image.sizing || image.dragging).length) {
-              moveStart(evt.clientX, evt.clientY);
-            }
-          }}
-          onMouseUp={(evt) => {
-            if (moving && !images.filter(image => image.sizing || image.dragging).length) {
-              pan(evt.clientX, evt.clientY);
-            }
-            moveEnd();
-          }}
-          onMouseMove={(evt) => {
-            if (moving && !images.filter(image => image.sizing || image.dragging).length) {
-              pan(evt.clientX, evt.clientY);
-            }
-          }}
+          onMouseDown={onMoveStart}
+          onTouchStart={onMoveStart}
+          onMouseMove={onMove}
+          onTouchMove={onMove}
+          onMouseUp={onMoveEnd}
+          onTouchEnd={onMoveEnd}
         >
           <div
             className={styles.scaller}
