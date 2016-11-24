@@ -109,7 +109,8 @@ export default function reducer(state = initialState, action = {}) {
           item => ({
             ...item,
             sizing: item.id === action.item.id,
-            focus: item.id === action.item.id ? action.item.focus : ''
+            focus: item.id === action.item.id ? action.item.focus : '',
+            z: item.id === action.item.id ? action.item.z : item.z
           })
         )
       };
@@ -145,7 +146,8 @@ export default function reducer(state = initialState, action = {}) {
         items: state.items.map(
           item => ({
             ...item,
-            dragging: item.id === action.item.id
+            dragging: item.id === action.item.id,
+            z: item.id === action.item.id ? action.item.z : item.z
           })
         )
       };

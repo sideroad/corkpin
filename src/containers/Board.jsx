@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { asyncConnect } from 'redux-connect';
-import { changeScale, moveStart, moveEnd, pan, setDefault, displayMode, editMode, configMode } from '../reducers/board';
+import { changeScale, moveStart, moveEnd, pan, setDefault, resetPan, displayMode, editMode, configMode } from '../reducers/board';
 import { sizingStart, sizingChange, sizingEnd, draggingStart, draggingEnd } from '../reducers/image';
 import { search as searchUser } from '../reducers/user';
 import Background from '../components/Background';
@@ -42,6 +42,7 @@ class Board extends Component {
       moveStart,
       moveEnd,
       pan,
+      resetPan,
       moving,
       panX,
       panY,
@@ -119,10 +120,13 @@ class Board extends Component {
                         if (mode !== 'edit') {
                           return;
                         }
-                        draggingStart(image);
                         let maxZ = 0;
                         images.forEach((image) => {
                           maxZ = maxZ > image.z ? maxZ : image.z;
+                        });
+                        draggingStart({
+                          ...image,
+                          z: maxZ + 1
                         });
                         fetcher.image
                           .update({
@@ -158,7 +162,19 @@ class Board extends Component {
                         if (mode !== 'edit') {
                           return;
                         }
-                        sizingStart(image);
+                        let maxZ = 0;
+                        images.forEach((image) => {
+                          maxZ = maxZ > image.z ? maxZ : image.z;
+                        });
+                        sizingStart({
+                          ...image,
+                          z: maxZ + 1
+                        });
+                        fetcher.image
+                          .update({
+                            id: image.id,
+                            z: maxZ + 1
+                          });
                       }
                     }
                     onSizing={
@@ -193,6 +209,33 @@ class Board extends Component {
             </div>
           </div>
         </Background>
+        <button
+          className={`${styles.centering} ${mode === 'edit' ? styles.editing : ''}`}
+          onClick={
+            () => {
+              resetPan();
+              const promises = images.map(image =>
+                fetcher.image
+                  .update({
+                    id: image.id,
+                    // TODO: scale logic, remove magic number as 10
+                    x: image.x - panX,
+                    y: image.y - panY
+                  })
+              );
+              Promise
+                .all(promises)
+                .then(
+                  () => fetcher.image
+                    .gets({
+                      board: params.id
+                    })
+                );
+            }
+          }
+        >
+          <i className="fa fa-crosshairs" />
+        </button>
         <button
           className={`${styles.edit} ${mode === 'edit' ? styles.editing : ''}`}
           onClick={
@@ -292,6 +335,7 @@ Board.propTypes = {
   draggingEnd: PropTypes.func.isRequired,
   setDefault: PropTypes.func.isRequired,
   pan: PropTypes.func.isRequired,
+  resetPan: PropTypes.func.isRequired,
   panX: PropTypes.number.isRequired,
   panY: PropTypes.number.isRequired,
   defaultX: PropTypes.number.isRequired,
@@ -340,6 +384,7 @@ const connected = connect(
     draggingStart,
     draggingEnd,
     pan,
+    resetPan,
     setDefault,
     searchUser,
     displayMode,

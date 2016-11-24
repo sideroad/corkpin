@@ -74,7 +74,11 @@ const Photo = ({
       editing ?
         <div
           className={`${styles.bottom} ${styles.right} ${focus === 'bottomright' ? styles.focus : ''}`}
-          onMouseDown={() => onSizingStart({ id, focus: 'bottomright' })}
+          onMouseDown={(evt) => {
+            evt.preventDefault();
+            onSizingStart({ id, focus: 'bottomright' });
+            return false;
+          }}
           onMouseMove={(evt) => {
             if (sizing) {
               onSizing({

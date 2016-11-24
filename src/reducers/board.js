@@ -11,6 +11,7 @@ const MOVE_START = 'board/MOVE_START';
 const MOVE_END = 'board/MOVE_END';
 const PAN_TO = 'board/PAN_TO';
 const PAN_DEFAULT = 'board/PAN_DEFAULT';
+const RESET_PAN = 'board/RESET_PAN';
 const CONFIG_MODE = 'board/CONFIG_MODE';
 const DISPLAY_MODE = 'board/DISPLAY_MODE';
 const EDIT_MODE = 'board/EDIT_MODE';
@@ -82,6 +83,13 @@ export default function reducer(state = initialState, action = {}) {
         ...state,
         moving: false
       };
+    case RESET_PAN: {
+      return {
+        ...state,
+        panX: 0,
+        panY: 0
+      };
+    }
     case PAN_TO:
       return {
         ...state,
@@ -159,6 +167,12 @@ export function setDefault(x, y) {
     type: PAN_DEFAULT,
     x,
     y
+  };
+}
+
+export function resetPan() {
+  return {
+    type: RESET_PAN
   };
 }
 
