@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { stringify } from 'koiki';
 import { asyncConnect } from 'redux-connect';
+import __ from 'lodash';
 import Header from '../components/Header';
 import Background from '../components/Background';
 import Signature from '../components/Signature';
@@ -54,11 +55,11 @@ const SelectAlbum = ({ route, push, albums, params, user }, { i18n, lang, fetche
                       photo: image.id,
                       name: image.name,
                       url: image.url,
-                      x: 0,
-                      y: 0,
+                      x: __.random(document.body.clientWidth / -4, document.body.clientWidth / 4),
+                      y: __.random(document.body.clientHeight / -4, document.body.clientHeight / 4),
                       z: 0,
-                      width: 200,
-                      height: 200
+                      width: __.random(250, 300),
+                      height: __.random(250, 300)
                     }));
                 return Promise.all(promises);
               }
