@@ -29,7 +29,8 @@ class InputtableButton extends Component {
       className = '',
       button,
       placeholder,
-      onClick = () => {}
+      onClick = () => {},
+      onChange = () => {}
     } = this.props;
     const {
       clicked,
@@ -69,6 +70,7 @@ class InputtableButton extends Component {
               default:
             }
           }}
+          onChange={evt => onChange(evt)}
           onBlur={() => blur()}
         />
         <i className={`fa ${icon} ${styles.prefix}`} aria-hidden="true" />
@@ -84,7 +86,8 @@ InputtableButton.propTypes = {
   icon: PropTypes.string.isRequired,
   button: PropTypes.string.isRequired,
   placeholder: PropTypes.string,
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
+  onChange: PropTypes.func
 };
 
 export default InputtableButton;

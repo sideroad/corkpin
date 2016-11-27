@@ -32,7 +32,8 @@ export default {
   },
   board: {
     gets: {
-      url: `${api}/apis/board/boards`
+      url: `${base}/api/boards`,
+      credentials: 'include'
     },
     get: {
       url: `${api}/apis/board/boards/:id`
@@ -49,7 +50,6 @@ export default {
   image: {
     gets: {
       url: `${base}/api/images`,
-      mode: 'cors',
       credentials: 'include'
     },
     get: {

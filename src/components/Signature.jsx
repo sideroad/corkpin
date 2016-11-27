@@ -17,6 +17,7 @@ const Signature = props =>
         icon="fa-search"
         className={styles.find}
         onClick={props.onClickFind}
+        onChange={props.onChangeFind}
         button={props.find}
         placeholder={props.find}
         clicked={props.finding}
@@ -42,7 +43,8 @@ Signature.propTypes = {
   findOnFacebook: PropTypes.string.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   onClickFind: PropTypes.func,
-  onClickCreate: PropTypes.func
+  onClickCreate: PropTypes.func,
+  onChangeFind: PropTypes.func
 };
 
 export default reduxForm({

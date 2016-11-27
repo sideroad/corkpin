@@ -19,7 +19,7 @@ const SelectAlbum = ({ route, push, albums, params, user }, { i18n, lang, fetche
     <Background image={require('../images/bg.png')} >
       <Signature
         lead={i18n.lead}
-        find={i18n.find}
+        find={i18n.find_board}
         create={i18n.create}
         findOnFacebook={i18n.find_on_facebook}
         creating

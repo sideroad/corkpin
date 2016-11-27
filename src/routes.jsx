@@ -3,6 +3,7 @@ import { Route, IndexRoute } from 'react-router';
 
 import App from './containers/App';
 import Home from './containers/Home';
+import Find from './containers/Find';
 import SelectAlbum from './containers/SelectAlbum';
 import PrivacyPolicy from './containers/PrivacyPolicy';
 import Board from './containers/Board';
@@ -20,7 +21,6 @@ export default (store, cookie) => {
       cb();
     } else {
       fetch(`${config.app.base}/auth`, {
-        mode: 'cors',
         credentials: 'include',
         headers: {
           cookie: `connect.sid=${cookie.get('connect.sid')}`
@@ -30,7 +30,9 @@ export default (store, cookie) => {
           if (res.ok) {
             return res.json();
           }
-          cookie.set('redirect', nextState.location.pathname);
+          cookie.set('redirect', nextState.location.pathname, {
+            path: '/'
+          });
           if (__SERVER__) {
             replace('/auth/facebook');
           } else {
@@ -53,7 +55,7 @@ export default (store, cookie) => {
     <Route path={uris.pages.root} component={App} >
       <IndexRoute component={Home} />
       <Route path={uris.pages.privacy} component={PrivacyPolicy} />
-      <Route path={uris.pages.finding} component={Home} />
+      <Route path={uris.pages.finding} component={Find} onEnter={getAuth} />
       <Route path={uris.pages.creating} component={SelectAlbum} onEnter={getAuth} />
       <Route path={uris.pages.board} component={Board} onEnter={getAuth} />
       { /* Catch all route */ }
