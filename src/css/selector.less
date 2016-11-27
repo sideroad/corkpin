@@ -1,0 +1,73 @@
+@import "variables.less";
+
+.icon {
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+}
+
+.text {
+	font-size: 1.3em;
+  margin-left: 15px;
+	color: @sumi;
+}
+
+.selected {
+	display: flex;
+	align-items: center;
+	border: 2px solid @shironezu;
+	border-radius: 3px;
+	padding: 3px 10px;
+	transition-property: background;
+  transition-duration: 0.4s;
+}
+
+.selected:hover {
+	border: 2px solid @sora;
+	background-color: @sora;
+	transition-property: background;
+	transition-duration: 0.2s;
+}
+
+.modal {
+	overflow: scroll;
+	position: absolute;
+	width: 70%;
+  top: 10%;
+  left: 5%;
+  right: 5%;
+  bottom: 10%;
+  padding: 10%;
+	border-radius: 3px;
+	box-shadow: @shadow;
+	transition-property: transform, opacity;
+	transition-duration: 0.4s;
+	background-color: @gofun;
+}
+
+.overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(255, 255, 255, 0.74902);
+}
+
+.show {
+	opacity: 1;
+	transform: translateY(0%);
+}
+.hide {
+	opacity: 0;
+	transform: translateY(100%);
+}
+
+.showOverlay {
+	opacity: 1;
+	display: block;
+}
+
+.hideOverlay {
+	display: none;
+}

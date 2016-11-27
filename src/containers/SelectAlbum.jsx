@@ -9,8 +9,9 @@ import Background from '../components/Background';
 import Signature from '../components/Signature';
 import List from '../components/List';
 import uris from '../uris';
-
 import { set } from '../reducers/album';
+
+const styles = require('../css/select-album.less');
 
 const SelectAlbum = ({ route, push, albums, params, user }, { i18n, lang, fetcher }) =>
   <div>
@@ -24,6 +25,7 @@ const SelectAlbum = ({ route, push, albums, params, user }, { i18n, lang, fetche
         creating
       />
       <List
+        className={styles.list}
         items={
           albums.map(
             album => ({

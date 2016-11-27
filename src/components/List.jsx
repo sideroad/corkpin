@@ -2,8 +2,8 @@ import React, { PropTypes } from 'react';
 
 const styles = require('../css/list.less');
 
-const List = ({ hover, theme, position, items, onClick }) =>
-  <ul className={`${styles.list} ${styles[hover]} ${styles[theme]} ${styles[position]}`} >
+const List = ({ className, hover, theme, position, items, onClick }) =>
+  <ul className={`${styles.list} ${styles[hover]} ${styles[theme]} ${styles[position]} ${className}`} >
     {
       items.map(item =>
         <li
@@ -32,6 +32,7 @@ const List = ({ hover, theme, position, items, onClick }) =>
   </ul>;
 
 List.propTypes = {
+  className: PropTypes.string,
   items: PropTypes.array.isRequired,
   hover: PropTypes.oneOf(['unveil', 'cover']).isRequired,
   theme: PropTypes.oneOf(['classic', 'pop']).isRequired,
@@ -40,6 +41,7 @@ List.propTypes = {
 };
 
 List.defaultProps = {
+  className: '',
   items: [],
   onClick: evt => evt.preventDefault(),
   hover: 'unveil',

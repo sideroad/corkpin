@@ -9,10 +9,14 @@ import Settings from '../components/Settings';
 import Photo from '../components/Photo';
 
 const MouseWheelHandler = (evt, changeScale, mode) => {
-  evt.preventDefault();
   if (mode === 'display') {
+    evt.preventDefault();
     changeScale(evt.deltaY);
   }
+};
+
+const setDefaultPan = (evt, setDefault) => {
+  setDefault(document.body.clientWidth / 2, document.body.clientHeight / 2);
 };
 
 const styles = require('../css/board.less');
@@ -23,10 +27,13 @@ class Board extends Component {
   componentDidMount() {
     this.MouseWheelHandler = evt => MouseWheelHandler(evt, this.props.changeScale, this.props.mode);
     document.body.addEventListener('mousewheel', this.MouseWheelHandler, false);
-    this.props.setDefault(document.body.clientWidth / 2, document.body.clientHeight / 2);
+    this.setDefault = evt => setDefaultPan(evt, this.props.setDefault);
+    window.addEventListener('resize', this.setDefault, false);
+    this.setDefault();
   }
   componentWillUnmount() {
     document.body.removeEventListener('mousewheel', this.MouseWheelHandler, false);
+    window.removeEventListener('resize', this.setDefault, false);
   }
 
   render() {
@@ -128,6 +135,7 @@ class Board extends Component {
                         images.forEach((image) => {
                           maxZ = maxZ > image.z ? maxZ : image.z;
                         });
+                        // TODO: dragging will be different with actuall manupilation
                         draggingStart({
                           ...image,
                           z: maxZ + 1
@@ -186,6 +194,7 @@ class Board extends Component {
                         if (mode !== 'edit') {
                           return;
                         }
+                        // TODO: sizing will be different with actuall manupilation
                         sizingChange({
                           id: image.id,
                           width: image.width + (panX - defaultX),
@@ -222,7 +231,6 @@ class Board extends Component {
                 fetcher.image
                   .update({
                     id: image.id,
-                    // TODO: scale logic, remove magic number as 10
                     x: image.x - panX,
                     y: image.y - panY
                   })
@@ -278,6 +286,18 @@ class Board extends Component {
               .update({
                 id: params.id,
                 name
+              })
+              .then(
+                () => fetcher.board.get({
+                  id: params.id
+                })
+              )
+          }
+          onChangeBoardBackground={
+            item => fetcher.board
+              .update({
+                id: params.id,
+                background: item.id
               })
               .then(
                 () => fetcher.board.get({
