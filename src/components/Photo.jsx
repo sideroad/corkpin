@@ -1,115 +1,145 @@
-import React, { PropTypes } from 'react';
+import React, { PropTypes, Component } from 'react';
+import url from 'url';
 
 const styles = require('../css/photo.less');
 
-const Photo = ({
-  top,
-  left,
-  zIndex,
-  id,
-  image,
-  onDragStart,
-  onDragEnd,
-  width,
-  height,
-  description,
-  dragging,
-  editing,
-  scale,
-  onSizingStart,
-  onSizing,
-  onSizingEnd,
-  sizing,
-  focus
-}) =>
-  <div
-    className={`${styles.photo} ${dragging ? styles.dragging : ''} ${sizing ? styles.sizing : ''} ${editing ? styles.editing : ''}`}
-    style={{
-      top: `${top}px`,
-      left: `${left}px`,
-      zIndex: `${zIndex}`
-    }}
-    draggable={!sizing && editing}
-    onDragStart={() => {
-      if (!sizing) {
-        onDragStart({ id });
-      }
-    }}
-    onDragEnd={(evt) => {
-      console.log(scale, top, left, evt.clientY, evt.clientX, evt.target.offsetHeight);
-      if (!sizing) {
-        onDragEnd({
-          id,
-          left: evt.clientX / scale,
-          top: (evt.clientY / scale) - evt.target.offsetHeight
-        });
-      }
-    }}
-  >
-    <div
-      className={styles.image}
-      style={{
-        width: `${width}px`,
-        height: `${height}px`,
-        backgroundImage: `url(${image})`
-      }}
-    />
-    {description ?
+class Photo extends Component {
+  render() {
+    const {
+      top,
+      left,
+      zIndex,
+      id,
+      image,
+      onDragStart,
+      onDragEnd,
+      width,
+      height,
+      description,
+      dragging,
+      editing,
+      scale,
+      onSizingStart,
+      onSizing,
+      onSizingEnd,
+      sizing,
+      focus
+    } = this.props;
+    return (
       <div
-        className={styles.description}
+        className={`${styles.photo} ${dragging ? styles.dragging : ''} ${sizing ? styles.sizing : ''} ${editing ? styles.editing : ''}`}
         style={{
-          width: `${width}px`
+          top: `${top}px`,
+          left: `${left}px`,
+          zIndex: `${zIndex}`
+        }}
+        draggable={!sizing && editing}
+        onDragStart={() => {
+          if (!sizing) {
+            onDragStart({ id });
+          }
+        }}
+        onDragEnd={(evt) => {
+          console.log(scale, top, left, evt.clientY, evt.clientX, evt.target.offsetHeight);
+          if (!sizing) {
+            onDragEnd({
+              id,
+              left: (evt.clientX / scale),
+              top: (evt.clientY / scale)
+                  - evt.target.offsetHeight // calculate from the posision
+                  - 10 // top padding
+            });
+          }
         }}
       >
-        {description}
-      </div> : ''}
-    {
-      editing ?
-        <div className={styles.hover}>
-          <i className="fa fa-arrows" />
-        </div>
-        : ''
-    }
-    {
-      editing ?
-        <div
-          className={`${styles.bottom} ${styles.right} ${focus === 'bottomright' ? styles.focus : ''}`}
-          onMouseDown={(evt) => {
-            evt.preventDefault();
-            onSizingStart({ id, focus: 'bottomright' });
-            return false;
-          }}
-          onMouseMove={(evt) => {
-            if (sizing) {
-              onSizing({
-                id,
-                width: (evt.clientX) - (left),
-                height: (evt.clientY) - (top)
-              });
-            }
-          }}
-          onMouseUp={(evt) => {
-            if (sizing) {
-              onSizingEnd({
-                id,
-                width: (evt.clientX) - (left),
-                height: (evt.clientY) - (top)
-              });
-            }
-          }}
-        /> : ''
-    }
-    {
-      /* TODO: rotate photos
-      <div
-        className={`${styles.top} ${styles.right}`}
-      />
-      <div
-        className={`${styles.bottom} ${styles.left}`}
-      />
-      */
-    }
-  </div>;
+        {
+          /\.(jpg|png|gif)$/.test(url.parse(image).pathname) ?
+            <div
+              className={styles.image}
+              style={{
+                width: `${width}px`,
+                height: `${height}px`,
+                backgroundImage: `url(${image})`
+              }}
+            />
+          :
+            <video
+              muted
+              controls
+              loop
+              autoPlay
+              style={{
+                width: `${width}px`,
+                height: `${height}px`
+              }}
+            >
+              <source src={image} />
+            </video>
+        }
+        {description ?
+          <div
+            ref={(elem) => { this.descriptionDOM = elem; }}
+            className={styles.description}
+            style={{
+              width: `${width}px`
+            }}
+          >
+            {description}
+          </div> : ''}
+        {
+          editing ?
+            <div className={styles.hover}>
+              <i className="fa fa-arrows" />
+            </div>
+            : ''
+        }
+        {
+          editing ?
+            <div
+              className={`${styles.bottom} ${styles.right} ${focus === 'bottomright' ? styles.focus : ''}`}
+              onMouseDown={(evt) => {
+                evt.preventDefault();
+                onSizingStart({ id, focus: 'bottomright' });
+                return false;
+              }}
+              onMouseMove={(evt) => {
+                if (sizing) {
+                  onSizing({
+                    id,
+                    width: (evt.clientX) - (left) - 20, // padding from parent left + right
+                    height: (evt.clientY) - (top) - 20  // padding from parent top + bottom
+                          - (this.descriptionDOM ? this.descriptionDOM.offsetHeight : 0)
+                          // description height
+                  });
+                }
+              }}
+              onMouseUp={(evt) => {
+                if (sizing) {
+                  onSizingEnd({
+                    id,
+                    width: (evt.clientX) - (left) - 20, // padding from parent left + right
+                    height: (evt.clientY) - (top) - 20  // padding from parent top + bottom
+                          - (this.descriptionDOM ? this.descriptionDOM.offsetHeight : 0)
+                          // description height
+                  });
+                }
+              }}
+            /> : ''
+        }
+        {
+          /* TODO: rotate photos
+          <div
+            className={`${styles.top} ${styles.right}`}
+          />
+          <div
+            className={`${styles.bottom} ${styles.left}`}
+          />
+          */
+        }
+      </div>
+    );
+  }
+}
 
 Photo.propTypes = {
   id: PropTypes.string.isRequired,

@@ -135,7 +135,6 @@ class Board extends Component {
                         images.forEach((image) => {
                           maxZ = maxZ > image.z ? maxZ : image.z;
                         });
-                        // TODO: dragging will be different with actuall manupilation
                         draggingStart({
                           ...image,
                           z: maxZ + 1
@@ -156,9 +155,8 @@ class Board extends Component {
                         fetcher.image
                           .update({
                             id: image.id,
-                            // TODO: scale logic, remove magic number as 10
-                            x: image.left + panX - defaultX + 10,
-                            y: image.top + panY - defaultY - 10
+                            x: image.left + panX - defaultX,
+                            y: image.top + panY - defaultY
                           })
                           .then(
                             () => fetcher.image
@@ -194,7 +192,6 @@ class Board extends Component {
                         if (mode !== 'edit') {
                           return;
                         }
-                        // TODO: sizing will be different with actuall manupilation
                         sizingChange({
                           id: image.id,
                           width: image.width + (panX - defaultX),
