@@ -69,7 +69,8 @@ const Settings = ({
               evt => onSearchUser(evt.target.value)
             }
             onBlur={
-              () => onBlurUser()
+              // XXX: to prevent blur before click suggested item
+              () => setTimeout(onBlurUser, 50)
             }
           />
           <div className={styles.suggest}>
