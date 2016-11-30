@@ -70,7 +70,7 @@ const Settings = ({
             }
             onBlur={
               // XXX: to prevent blur before click suggested item
-              () => setTimeout(onBlurUser, 50)
+              () => setTimeout(onBlurUser, 200)
             }
           />
           <div className={styles.suggest}>
