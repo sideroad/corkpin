@@ -263,7 +263,13 @@ class Board extends Component {
         <button
           className={styles.config}
           onClick={
-            () => configMode()
+            () => {
+              if (mode === 'config') {
+                displayMode();
+              } else {
+                configMode();
+              }
+            }
           }
         >
           <i className="fa fa-cog" />
