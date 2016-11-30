@@ -105,8 +105,8 @@
 }
 
 
-.delete {
-	background-color: @momohana;
+.delete,
+.add {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -123,6 +123,14 @@
 	color: @gofun;
 }
 
+.delete{
+	background-color: @momohana;
+}
+
+.add{
+	background-color: @hiwamoegi;
+}
+
 .deleteText {
 	font-size: 1.1em;
 	margin-left: 5px;
@@ -131,4 +139,5 @@
 .suggest {
 	width: 100%;
 	background-color: @gofun;
+	display: flex;
 }

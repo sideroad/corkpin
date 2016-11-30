@@ -56,7 +56,7 @@ const Settings = ({
       <dt>People who can see this board</dt>
       <dd>
         <TetherComponent
-          attachment="top center"
+          attachment="top left"
         >
           <Input
             icon={`fa-users ${styles.allowedUserIcon}`}
@@ -78,6 +78,10 @@ const Settings = ({
                 >
                   <img className={styles.icon} alt={user.name} src={user.image} />
                   <div className={styles.text} >{user.name}</div>
+                  <div className={styles.add} >
+                    <i className="fa fa-plus" />
+                    <div className={styles.addText} >Add</div>
+                  </div>
                 </button>
               )
             }
