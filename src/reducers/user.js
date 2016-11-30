@@ -31,13 +31,15 @@ export default function reducer(state = initialState, action = {}) {
         loaded: false,
         error: action.error
       };
-    case SEARCH:
+    case SEARCH: {
+      const regexp = new RegExp(`.*${action.query}.*`, 'i');
       return {
         ...state,
         loading: false,
         loaded: true,
-        matched: state.items.filter(item => item.name.match(action.query))
+        matched: state.items.filter(item => item.name.match(regexp))
       };
+    }
     case SET:
       return {
         ...state,
