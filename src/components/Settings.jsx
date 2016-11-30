@@ -56,7 +56,7 @@ const Settings = ({
       <dt>People who can see this board</dt>
       <dd>
         <TetherComponent
-          attachment="top left"
+          attachment="top right"
         >
           <Input
             icon={`fa-users ${styles.allowedUserIcon}`}

@@ -107,7 +107,7 @@ export default {
             items: res.data.map(item => ({
               id: item.id,
               name: item.name,
-              image: `https://graph.facebook.com/v2.8/${item.id}/picture?access_token=${values.token}`
+              image: `https://graph.facebook.com/v2.8/${item.id}/picture?access_token=${values.access_token}`
             }))
           });
         })
