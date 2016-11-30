@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import TetherComponent from 'react-tether';
+import __ from 'lodash';
 import Input from '../components/Input';
 import Selector from '../components/Selector';
 
@@ -13,6 +14,7 @@ const Settings = ({
   backgrounds,
   allows,
   onSearchUser,
+  onBlurUser,
   users,
   onChangeBoardName,
   onChangeBoardBackground,
@@ -66,25 +68,30 @@ const Settings = ({
             onChange={
               evt => onSearchUser(evt.target.value)
             }
+            onBlur={
+              () => onBlurUser()
+            }
           />
           <div className={styles.suggest}>
             {
-              users.map(user =>
-                <button
-                  className={styles.allowedUser}
-                  key={user.id}
-                  onClick={
-                    () => onAddUser(user.id)
-                  }
-                >
-                  <img className={styles.icon} alt={user.name} src={user.image} />
-                  <div className={styles.text} >{user.name}</div>
-                  <div className={styles.add} >
-                    <i className="fa fa-plus" />
-                    <div className={styles.addText} >Add</div>
-                  </div>
-                </button>
-              )
+              users
+                .filter(user => !__.find(allows, { id: user.id }))
+                .map(user =>
+                  <button
+                    className={styles.allowedUser}
+                    key={user.id}
+                    onClick={
+                      () => onAddUser(user.id)
+                    }
+                  >
+                    <img className={styles.icon} alt={user.name} src={user.image} />
+                    <div className={styles.text} >{user.name}</div>
+                    <div className={styles.add} >
+                      <i className="fa fa-plus" />
+                      <div className={styles.addText} >Add</div>
+                    </div>
+                  </button>
+                )
             }
           </div>
         </TetherComponent>
@@ -122,6 +129,7 @@ Settings.propTypes = {
   backgrounds: PropTypes.array.isRequired,
   allows: PropTypes.array.isRequired,
   onSearchUser: PropTypes.func.isRequired,
+  onBlurUser: PropTypes.func.isRequired,
   onChangeBoardName: PropTypes.func.isRequired,
   onChangeBoardBackground: PropTypes.func.isRequired,
   onAddUser: PropTypes.func.isRequired,

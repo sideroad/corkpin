@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { asyncConnect } from 'redux-connect';
 import { changeScale, moveStart, moveEnd, pan, setDefault, resetPan, displayMode, editMode, configMode } from '../reducers/board';
 import { sizingStart, sizingChange, sizingEnd, draggingStart, draggingEnd } from '../reducers/image';
-import { search as searchUser } from '../reducers/user';
+import { search as searchUser, blur as blurUser } from '../reducers/user';
 import Background from '../components/Background';
 import Settings from '../components/Settings';
 import Photo from '../components/Photo';
@@ -64,6 +64,7 @@ class Board extends Component {
       draggingStart,
       draggingEnd,
       searchUser,
+      blurUser,
       configMode,
       displayMode,
       editMode
@@ -278,6 +279,9 @@ class Board extends Component {
           onSearchUser={
             query => searchUser(query)
           }
+          onBlurUser={
+            () => blurUser()
+          }
           onChangeBoardName={
             name => fetcher.board
               .update({
@@ -365,6 +369,7 @@ Board.propTypes = {
   moving: PropTypes.bool.isRequired,
   allows: PropTypes.array.isRequired,
   searchUser: PropTypes.func.isRequired,
+  blurUser: PropTypes.func.isRequired,
   mode: PropTypes.string.isRequired,
   displayMode: PropTypes.func.isRequired,
   editMode: PropTypes.func.isRequired,
@@ -408,6 +413,7 @@ const connected = connect(
     resetPan,
     setDefault,
     searchUser,
+    blurUser,
     displayMode,
     editMode,
     configMode
