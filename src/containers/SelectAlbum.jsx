@@ -13,6 +13,9 @@ import { set } from '../reducers/album';
 
 const styles = require('../css/select-album.less');
 
+// TODO: Be able to create board from scratch
+// TODO: Change board id to not use album id of facebook.
+//       Change sentence "Select album" to "Select import album"
 const SelectAlbum = ({ route, push, albums, params, user }, { i18n, lang, fetcher }) =>
   <div>
     <Header homeURL={stringify(uris.pages.root, { lang })} />

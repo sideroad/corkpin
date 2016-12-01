@@ -4,6 +4,7 @@ import config from './config';
 const base = config.app.base;
 const api = normalize(`${config.api.host}:${config.api.port}`);
 
+// TODO: Move every API to bff with secret, client ID with chaus
 export default {
   album: {
     gets: {

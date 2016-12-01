@@ -8,6 +8,7 @@ import Background from '../components/Background';
 import Settings from '../components/Settings';
 import Photo from '../components/Photo';
 
+// TODO: Pinch out interaction on SmartDevice
 const MouseWheelHandler = (evt, changeScale, mode) => {
   if (mode === 'display') {
     evt.preventDefault();

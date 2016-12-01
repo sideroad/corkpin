@@ -106,6 +106,7 @@ class Photo extends Component {
                 if (sizing) {
                   onSizing({
                     id,
+                    // TODO: Be able to specify photo padding in board
                     width: (evt.clientX) - (left) - 20, // padding from parent left + right
                     height: (evt.clientY) - (top) - 20  // padding from parent top + bottom
                           - (this.descriptionDOM ? this.descriptionDOM.offsetHeight : 0)

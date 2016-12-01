@@ -7,6 +7,7 @@ import IconButton from '../components/IconButton';
 
 const styles = require('../css/settings.less');
 
+// TODO: Be able to add images/videos, Delete images/videos
 const Settings = ({
   userId,
   display,

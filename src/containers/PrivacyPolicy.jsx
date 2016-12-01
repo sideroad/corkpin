@@ -6,6 +6,7 @@ import Background from '../components/Background';
 
 const styles = require('../css/privacypolicy.less');
 
+// TODO: Add policy for video, friend list, post
 const PrivacyPolicy = (props, { i18n, lang }) =>
   <div>
     <Header homeURL={stringify(uris.pages.root, { lang })} />
