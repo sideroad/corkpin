@@ -1,8 +1,9 @@
 import React, { PropTypes } from 'react';
-import TetherComponent from 'react-tether';
 import __ from 'lodash';
 import Input from '../components/Input';
 import Selector from '../components/Selector';
+import Suggest from '../components/Suggest';
+import IconButton from '../components/IconButton';
 
 const styles = require('../css/settings.less');
 
@@ -57,64 +58,34 @@ const Settings = ({
       </dd>
       <dt>People who can see this board</dt>
       <dd>
-        <TetherComponent
-          attachment="top left"
-          targetAttachment="bottom left"
-        >
-          <Input
-            icon={`fa-users ${styles.allowedUserIcon}`}
-            value=""
-            placeholder="Search and enter to allow users"
-            onChange={
-              evt => onSearchUser(evt.target.value)
-            }
-            onBlur={
-              // XXX: to prevent blur before click suggested item
-              () => setTimeout(onBlurUser, 200)
-            }
-          />
-          <div className={styles.suggest}>
-            {
-              users
-                .filter(user => !__.find(allows, { id: user.id }))
-                .map(user =>
-                  <button
-                    className={styles.allowedUser}
-                    key={user.id}
-                    onClick={
-                      () => onAddUser(user.id)
-                    }
-                  >
-                    <img className={styles.icon} alt={user.name} src={user.image} />
-                    <div className={styles.text} >{user.name}</div>
-                    <div className={styles.add} >
-                      <i className="fa fa-plus" />
-                      <div className={styles.addText} >Add</div>
-                    </div>
-                  </button>
-                )
-            }
-          </div>
-        </TetherComponent>
+        <Suggest
+          onChange={
+            query => onSearchUser(query)
+          }
+          onBlur={
+            () => onBlurUser()
+          }
+          items={
+            users
+              .filter(user => !__.find(allows, { id: user.id }))
+          }
+          onSelect={
+            user => onAddUser(user.id)
+          }
+        />
         <div className={styles.allowedUsers}>
           {
             allows
               .filter(user => user.id !== userId)
               .map(user =>
-                <button
-                  className={styles.allowedUser}
+                <IconButton
                   key={user.id}
+                  item={user}
                   onClick={
-                    () => onDeleteUser(user.id)
+                    user => onDeleteUser(user.id)
                   }
-                >
-                  <img className={styles.icon} alt={user.name} src={user.image} />
-                  <div className={styles.text} >{user.name}</div>
-                  <div className={styles.delete} >
-                    <i className="fa fa-trash" />
-                    <div className={styles.deleteText} >Delete</div>
-                  </div>
-                </button>
+                  type="delete"
+                />
               )
           }
         </div>
