@@ -8,26 +8,25 @@ import Background from '../components/Background';
 import Signature from '../components/Signature';
 import Footer from '../components/Footer';
 
-import { set as setUser } from '../reducers/user';
-
-const Home = ({ route, push, setUser }, { i18n, lang }) =>
+const Home = ({ route, push, user }, { i18n, lang }) =>
   <div>
     <Header homeURL={stringify(uris.pages.root, { lang })} />
     <Background image={require('../images/bg.png')} >
       <Signature
         lead={i18n.lead}
-        find={i18n.find_board}
-        create={i18n.create}
-        findOnFacebook={i18n.find_on_facebook}
-        onSubmit={(values) => {
-          console.log(values);
-        }}
+        find={user.id ? i18n.find_board : ''}
+        create={user.id ? i18n.create : ''}
+        start={user.id ? '' : i18n.start}
         onClickFind={() => {
           push(stringify(uris.pages.finding, { lang }));
         }}
         onClickCreate={() => {
           push(stringify(uris.pages.creating, { lang }));
         }}
+        onClickStart={() => {
+          location.href = uris.pages.login;
+        }}
+        type="starting"
       />
     </Background>
     <Footer privacyPolicyURL={stringify(uris.pages.privacy, { lang })} />
@@ -36,7 +35,7 @@ const Home = ({ route, push, setUser }, { i18n, lang }) =>
 Home.propTypes = {
   route: PropTypes.object.isRequired,
   push: PropTypes.func.isRequired,
-  setUser: PropTypes.func.isRequired
+  user: PropTypes.object.isRequired
 };
 
 Home.contextTypes = {
@@ -48,10 +47,11 @@ Home.contextTypes = {
 
 
 const connected = connect(
-  state => state,
+  state => ({
+    user: state.user.item
+  }),
   {
-    push,
-    setUser
+    push
   }
 )(Home);
 

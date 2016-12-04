@@ -1,6 +1,7 @@
 export default {
   pages: {
     root: '/:lang',
+    login: '/auth/facebook',
     finding: '/:lang/find',
     creating: '/:lang/create',
     board: '/:lang/boards/:id',

@@ -26,7 +26,6 @@ module.exports = Object.assign({
   },
   facebook: {
     appId: process.env.FACEBOOK_APP_ID,
-    // appId: process.env.FACEBOOK_APP_ID || '982943141828612',
     secret: process.env.FACEBOOK_APP_SECRET
   },
   app: {

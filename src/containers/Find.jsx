@@ -17,11 +17,10 @@ const Find = ({ route, push, boards, params, user }, { i18n, lang, fetcher }) =>
     <Header homeURL={stringify(uris.pages.root, { lang })} />
     <Background image={require('../images/bg.png')} >
       <Signature
-        lead={i18n.lead}
+        lead={i18n.find_to_meet}
         find={i18n.find_board}
         create={i18n.create}
-        findOnFacebook={i18n.find_on_facebook}
-        finding
+        type="finding"
         onChangeFind={
           (evt) => {
             fetcher.board

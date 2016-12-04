@@ -21,11 +21,10 @@ const SelectAlbum = ({ route, push, albums, params, user }, { i18n, lang, fetche
     <Header homeURL={stringify(uris.pages.root, { lang })} />
     <Background image={require('../images/bg.png')} >
       <Signature
-        lead={i18n.lead}
+        lead={i18n.find_on_facebook}
         find={i18n.find_board}
         create={i18n.create}
-        findOnFacebook={i18n.find_on_facebook}
-        creating
+        type="creating"
       />
       <List
         className={styles.list}

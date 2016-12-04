@@ -47,7 +47,7 @@ export default {
     app.get('/auth/facebook/callback',
       passport.authenticate('facebook', { scope: ['user_photos', 'user_videos', 'user_posts', 'user_friends'], session: true, failureRedirect: '/auth/facebook' }),
       (req, res) => {
-        res.redirect(req.cookies.redirect);
+        res.redirect(req.cookies.redirect || '/');
       });
   }
 };

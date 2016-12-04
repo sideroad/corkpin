@@ -8,6 +8,8 @@ import Background from '../components/Background';
 import Settings from '../components/Settings';
 import Photo from '../components/Photo';
 
+// TODO: Be able to add text with WYSWYG
+// TODO: Zooming does not start from center of viewport.
 // TODO: Pinch out interaction on SmartDevice
 const MouseWheelHandler = (evt, changeScale, mode) => {
   if (mode === 'display') {

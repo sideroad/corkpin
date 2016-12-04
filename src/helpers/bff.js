@@ -39,7 +39,7 @@ export default function (app) {
           const boards = res.items.map(item => item.board.id);
           return boards;
         })
-        .then(boards => fetch(`${base}/apis/board/boards?id=${boards.join(',')}&name=*${values.query || ''}*`))
+        .then(boards => console.log(`${base}/apis/board/boards?id=${boards.join(',')}&name=*${values.query || ''}*`) || fetch(`${base}/apis/board/boards?id=${boards.join(',')}&name=*${values.query || ''}*`))
         .then(res => res.json())
         .then((res) => {
           const promises = res.items.map(
