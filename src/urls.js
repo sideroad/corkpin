@@ -1,8 +1,6 @@
-import { normalize } from 'koiki';
 import config from './config';
 
 const base = config.app.base;
-const api = normalize(`${config.api.host}:${config.api.port}`);
 
 // TODO: Move every API to bff with secret, client ID with chaus
 export default {
@@ -33,41 +31,41 @@ export default {
   },
   board: {
     gets: {
-      url: `${base}/api/boards`,
+      url: `${base}/bff/apis/board/boards`,
       credentials: 'include'
     },
     get: {
-      url: `${api}/apis/board/boards/:id`
+      url: `${base}/bff/apis/board/boards/:id`
     },
     update: {
       method: 'POST',
-      url: `${api}/apis/board/boards/:id`
+      url: `${base}/bff/apis/board/boards/:id`
     },
     save: {
       method: 'POST',
-      url: `${api}/apis/board/boards`
+      url: `${base}/bff/apis/board/boards`
     }
   },
   image: {
     gets: {
-      url: `${base}/api/images`,
+      url: `${base}/bff/apis/board/images`,
       credentials: 'include'
     },
     get: {
-      url: `${api}/apis/board/images/:id`
+      url: `${base}/bff/apis/board/images/:id`
     },
     save: {
       method: 'POST',
-      url: `${api}/apis/board/images`
+      url: `${base}/bff/apis/board/images`
     },
     update: {
       method: 'POST',
-      url: `${api}/apis/board/images/:id`
+      url: `${base}/bff/apis/board/images/:id`
     }
   },
   allow: {
     gets: {
-      url: `${api}/apis/board/allows`,
+      url: `${base}/bff/apis/board/allows`,
       after: (values, res) => {
         const token = values.access_token;
         const allows = res.items;
@@ -87,16 +85,16 @@ export default {
     },
     save: {
       method: 'POST',
-      url: `${api}/apis/board/allows`
+      url: `${base}/bff/apis/board/allows`
     },
     delete: {
       method: 'DELETE',
-      url: `${api}/apis/board/allows`
+      url: `${base}/bff/apis/board/allows`
     }
   },
   background: {
     gets: {
-      url: `${api}/apis/board/backgrounds`
+      url: `${base}/bff/apis/board/backgrounds`
     }
   },
   user: {

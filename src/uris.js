@@ -8,7 +8,7 @@ export default {
     privacy: '/:lang/privacy'
   },
   apis: {
-    images: '/api/images',
-    boards: '/api/boards'
+    images: '/bff/apis/board/images',
+    boards: '/bff/apis/board/boards'
   }
 };
