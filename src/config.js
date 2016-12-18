@@ -28,6 +28,15 @@ module.exports = Object.assign({
     appId: process.env.FACEBOOK_APP_ID,
     secret: process.env.FACEBOOK_APP_SECRET
   },
+  chaus: {
+    client: process.env.CHAUS_BOARD_CLIENT_ID,
+    secret: process.env.CHAUS_BOARD_SECRET_ID
+  },
+  cloudinary: {
+    name: process.env.CLOUDINARY_NAME,
+    client: process.env.CLOUDINARY_CLIENT_ID,
+    secret: process.env.CLOUDINARY_SECRET_ID
+  },
   app: {
     base,
     host: appHost,

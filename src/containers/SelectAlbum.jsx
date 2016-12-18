@@ -49,13 +49,12 @@ const SelectAlbum = ({ route, push, albums, params, user }, { i18n, lang, fetche
               user: user.id,
               background: 'corkboard'
             })
-            .catch(() => {})
             .then(
-              () => {
+              (res) => {
                 const promises = item.images.map(image =>
                   fetcher.image
                     .save({
-                      board: item.id,
+                      board: res.id,
                       photo: image.id,
                       name: image.name,
                       url: image.url,
@@ -65,21 +64,21 @@ const SelectAlbum = ({ route, push, albums, params, user }, { i18n, lang, fetche
                       width: __.random(250, 300),
                       height: __.random(250, 300)
                     }));
-                return Promise.all(promises);
+                promises.push(
+                  fetcher.allow
+                    .save({
+                      board: res.id,
+                      user: user.id
+                    })
+                );
+                return Promise.all(promises).then(() => ({ id: res.id }));
               }
             )
             .then(
-              () => fetcher.allow
-                .save({
-                  board: item.id,
-                  user: user.id
-                })
-            )
-            .then(
-              () => push(stringify(uris.pages.board, { lang, id: item.id }))
+              res => push(stringify(uris.pages.board, { lang, id: res.id }))
             )
             .catch(
-              () => push(stringify(uris.pages.board, { lang, id: item.id }))
+              err => console.error(err)
             );
         }}
       />
