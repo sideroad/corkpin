@@ -125,3 +125,26 @@
 .bottom.left {
 	cursor: nesw-resize;
 }
+
+.delete {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	border-radius: 50%;
+	background-color: @gofun;
+	color: @momohana;
+	width: 30px;
+	height: 30px;
+	font-size: 20px;
+	display: flex;
+	justify-content: center;
+	transition-property: transform, background-color;
+	transition-duration: 0.2s;
+	button{
+		border: none;
+	}
+}
+.delete:hover {
+	transform: scale(1.5);
+	background-color: none;
+}

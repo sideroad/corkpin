@@ -1,12 +1,17 @@
+import __ from 'lodash';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { asyncConnect } from 'redux-connect';
-import { changeScale, moveStart, moveEnd, pan, setDefault, resetPan, displayMode, editMode, configMode } from '../reducers/board';
+import { v4 } from 'uuid';
+import isVideo from 'is-video';
+import { changeScale, moveStart, moveEnd, pan, setDefault, resetPan, displayMode, editMode, addMode, configMode, uploadMode } from '../reducers/board';
 import { sizingStart, sizingChange, sizingEnd, draggingStart, draggingEnd } from '../reducers/image';
 import { search as searchUser, blur as blurUser } from '../reducers/user';
 import Background from '../components/Background';
 import Settings from '../components/Settings';
 import Photo from '../components/Photo';
+import MultiSelector from '../components/MultiSelector';
+import Uploader from '../components/Uploader';
 
 // TODO: Be able to add text with WYSWYG
 // TODO: Zooming does not start from center of viewport.
@@ -20,6 +25,14 @@ const MouseWheelHandler = (evt, changeScale, mode) => {
 
 const setDefaultPan = (evt, setDefault) => {
   setDefault(document.body.clientWidth / 2, document.body.clientHeight / 2);
+};
+
+const getMaxZ = (images) => {
+  let maxZ = 0;
+  images.forEach((image) => {
+    maxZ = maxZ > image.z ? maxZ : image.z;
+  });
+  return maxZ;
 };
 
 const styles = require('../css/board.less');
@@ -70,13 +83,16 @@ class Board extends Component {
       blurUser,
       configMode,
       displayMode,
-      editMode
+      editMode,
+      addMode,
+      uploadMode,
+      media,
     } = this.props;
     const { fetcher } = this.context;
     return (
       <div className={moving ? styles.grabbing : styles.grab}>
         <Background
-          blur={mode === 'config'}
+          blur={mode === 'config' || mode === 'add' || mode === 'upload'}
           image={`/images/bg-${background.id}.jpg`}
           overflow="hidden"
           onMoveStart={(evt) => {
@@ -176,10 +192,7 @@ class Board extends Component {
                         if (mode !== 'edit') {
                           return;
                         }
-                        let maxZ = 0;
-                        images.forEach((image) => {
-                          maxZ = maxZ > image.z ? maxZ : image.z;
-                        });
+                        const maxZ = getMaxZ(images);
                         sizingStart({
                           ...image,
                           z: maxZ + 1
@@ -217,12 +230,41 @@ class Board extends Component {
                           });
                       }
                     }
+                    onDelete={
+                      (id) => {
+                        fetcher.image
+                          .delete({
+                            id
+                          })
+                          .then(
+                            () => fetcher.image.gets({
+                              board: params.id
+                            })
+                          );
+                      }
+                    }
                   />
                 )
               }
             </div>
           </div>
         </Background>
+        <button
+          className={`${styles.adding} ${mode === 'edit' ? styles.editing : ''}`}
+          onClick={
+            () => addMode()
+          }
+        >
+          <i className="fa fa-facebook-official" />
+        </button>
+        <button
+          className={`${styles.uploading} ${mode === 'edit' ? styles.editing : ''}`}
+          onClick={
+            () => uploadMode()
+          }
+        >
+          <i className="fa fa-plus-circle" />
+        </button>
         <button
           className={`${styles.centering} ${mode === 'edit' ? styles.editing : ''}`}
           onClick={
@@ -277,9 +319,107 @@ class Board extends Component {
         >
           <i className="fa fa-cog" />
         </button>
+        <Uploader
+          lead={'Upload from your device'}
+          display={mode === 'upload'}
+          onClose={
+            () => editMode()
+          }
+          onUploaded={
+            (err, res) => {
+              const promises = res.body.paths.map(path =>
+                fetcher.image
+                  .save({
+                    board: params.id,
+                    photo: v4(),
+                    name: '',
+                    url: path,
+                    isVideo: isVideo(path),
+                    fromUploader: true,
+                    x: __.random(document.body.clientWidth / -4, document.body.clientWidth / 4),
+                    y: __.random(document.body.clientHeight / -4, document.body.clientHeight / 4),
+                    z: getMaxZ(images) + 1,
+                    width: __.random(250, 300),
+                    height: __.random(250, 300)
+                  })
+              );
+              Promise.all(promises).then(
+                () =>
+                  fetcher.image.gets({
+                    board: params.id
+                  })
+              );
+            }
+          }
+        />
+        <MultiSelector
+          lead={'Import from Facebook'}
+          display={mode === 'add'}
+          items={
+            media
+              .concat(this.props.videos)
+              .map((medium) => {
+                const image = __.find(images, { photo: medium.id });
+                if (image) {
+                  return { ...medium, ...image, selected: true, name: 'inserted' };
+                }
+                return { ...medium, name: '' };
+              })
+          }
+          onClose={
+            () => editMode()
+          }
+          onSelect={
+            (item, selected) => {
+              if (selected) {
+                fetcher.image
+                  .save({
+                    board: params.id,
+                    photo: item.id,
+                    name: item.name,
+                    url: item.video || item.image,
+                    isVideo: Boolean(item.video),
+                    x: __.random(document.body.clientWidth / -4, document.body.clientWidth / 4),
+                    y: __.random(document.body.clientHeight / -4, document.body.clientHeight / 4),
+                    z: getMaxZ(images) + 1,
+                    width: __.random(250, 300),
+                    height: __.random(250, 300)
+                  })
+                  .then(
+                    () => fetcher.image.gets({
+                      board: params.id
+                    })
+                  );
+              } else {
+                fetcher.image
+                  .delete({
+                    id: item.id
+                  })
+                  .then(
+                    () => fetcher.image.gets({
+                      board: params.id
+                    })
+                  );
+              }
+            }
+          }
+          onReachToBottom={
+            () => {
+              if (this.props.mediaHasNext) {
+                fetcher.media.gets.next();
+              } else if (!this.props.videoIsLoaded) {
+                fetcher.video.gets({
+                  access_token: token
+                });
+              } else if (this.props.videoHasNext) {
+                fetcher.video.gets.next();
+              }
+            }
+          }
+        />
         <Settings
-          userId={userId}
           display={mode === 'config'}
+          userId={userId}
           name={name}
           background={background}
           backgrounds={backgrounds}
@@ -377,12 +517,19 @@ Board.propTypes = {
   background: PropTypes.object.isRequired,
   moving: PropTypes.bool.isRequired,
   allows: PropTypes.array.isRequired,
+  media: PropTypes.array.isRequired,
+  mediaHasNext: PropTypes.bool.isRequired,
   searchUser: PropTypes.func.isRequired,
   blurUser: PropTypes.func.isRequired,
   mode: PropTypes.string.isRequired,
   displayMode: PropTypes.func.isRequired,
   editMode: PropTypes.func.isRequired,
-  configMode: PropTypes.func.isRequired
+  addMode: PropTypes.func.isRequired,
+  uploadMode: PropTypes.func.isRequired,
+  configMode: PropTypes.func.isRequired,
+  videos: PropTypes.array.isRequired,
+  videoHasNext: PropTypes.bool.isRequired,
+  videoIsLoaded: PropTypes.bool.isRequired,
 };
 
 Board.contextTypes = {
@@ -408,6 +555,11 @@ const connected = connect(
     users: state.user.items,
     matchedUsers: state.user.matched,
     allows: state.allow.items,
+    media: state.media.items,
+    mediaHasNext: state.media.hasNext,
+    videos: state.video.items,
+    videoHasNext: state.video.hasNext,
+    videoIsLoaded: state.video.loaded
   }),
   {
     changeScale,
@@ -425,6 +577,8 @@ const connected = connect(
     blurUser,
     displayMode,
     editMode,
+    addMode,
+    uploadMode,
     configMode
   }
 )(Board);
@@ -448,6 +602,11 @@ const asynced = asyncConnect([{
     promises.push(fetcher.allow
       .gets({
         board: id,
+        access_token: user.token
+      })
+    );
+    promises.push(fetcher.media
+      .gets({
         access_token: user.token
       })
     );

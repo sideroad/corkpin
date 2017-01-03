@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react';
-import url from 'url';
+import isVideo from 'is-video';
 
 const styles = require('../css/photo.less');
 
@@ -23,7 +23,8 @@ class Photo extends Component {
       onSizing,
       onSizingEnd,
       sizing,
-      focus
+      focus,
+      onDelete
     } = this.props;
     return (
       <div
@@ -40,7 +41,6 @@ class Photo extends Component {
           }
         }}
         onDragEnd={(evt) => {
-          console.log(scale, top, left, evt.clientY, evt.clientX, evt.target.offsetHeight);
           if (!sizing) {
             onDragEnd({
               id,
@@ -53,16 +53,7 @@ class Photo extends Component {
         }}
       >
         {
-          /\.(jpg|png|gif)$/.test(url.parse(image).pathname) ?
-            <div
-              className={styles.image}
-              style={{
-                width: `${width}px`,
-                height: `${height}px`,
-                backgroundImage: `url(${image})`
-              }}
-            />
-          :
+          isVideo(image) ?
             <video
               muted
               controls
@@ -75,6 +66,15 @@ class Photo extends Component {
             >
               <source src={image} />
             </video>
+          :
+            <div
+              className={styles.image}
+              style={{
+                width: `${width}px`,
+                height: `${height}px`,
+                backgroundImage: `url(${image})`
+              }}
+            />
         }
         {description ?
           <div
@@ -128,10 +128,22 @@ class Photo extends Component {
             /> : ''
         }
         {
+          editing ?
+            <div
+              className={styles.delete}
+            >
+              <button
+                onClick={
+                  (evt) => {
+                    evt.preventDefault();
+                    onDelete(id);
+                  }
+                }
+              >
+                <i className="fa fa-trash" />
+              </button>
+            </div> : ''
           /* TODO: rotate photos
-          <div
-            className={`${styles.top} ${styles.right}`}
-          />
           <div
             className={`${styles.bottom} ${styles.left}`}
           />
@@ -160,7 +172,8 @@ Photo.propTypes = {
   onSizingEnd: PropTypes.func.isRequired,
   dragging: PropTypes.bool.isRequired,
   sizing: PropTypes.bool.isRequired,
-  focus: PropTypes.string.isRequired
+  focus: PropTypes.string.isRequired,
+  onDelete: PropTypes.func.isRequired,
 };
 
 export default Photo;

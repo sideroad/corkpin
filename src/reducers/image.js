@@ -33,7 +33,7 @@ export default function reducer(state = initialState, action = {}) {
         ...state,
         loading: false,
         loaded: true,
-        items: action.res.items.map(
+        items: action.body.items.map(
           item => ({
             ...item,
             sizing: false,
@@ -47,7 +47,7 @@ export default function reducer(state = initialState, action = {}) {
         ...state,
         loading: false,
         loaded: false,
-        error: action.error
+        error: action.err
       };
     case GET_START:
       return {
@@ -59,14 +59,14 @@ export default function reducer(state = initialState, action = {}) {
         ...state,
         loading: false,
         loaded: true,
-        item: action.res
+        item: action.body
       };
     case GET_FAIL:
       return {
         ...state,
         loading: false,
         loaded: false,
-        error: action.error
+        error: action.err
       };
     case UPDATE_START:
       return {
@@ -166,7 +166,7 @@ export default function reducer(state = initialState, action = {}) {
         ...state,
         loading: false,
         loaded: false,
-        error: action.error
+        error: action.err
       };
     default:
       return state;

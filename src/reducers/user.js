@@ -23,14 +23,14 @@ export default function reducer(state = initialState, action = {}) {
         ...state,
         loading: false,
         loaded: true,
-        items: action.res.items
+        items: action.body.items
       };
     case GETS_FAIL:
       return {
         ...state,
         loading: false,
         loaded: false,
-        error: action.error
+        error: action.err
       };
     case SEARCH: {
       const regexp = new RegExp(`.*${action.query}.*`, 'i');

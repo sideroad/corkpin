@@ -1,12 +1,14 @@
 
-const GETS_START = 'background/GETS_START';
-const GETS_SUCCESS = 'background/GETS_SUCCESS';
-const GETS_FAIL = 'background/GETS_FAIL';
+const GETS_START = 'video/GETS_START';
+const GETS_SUCCESS = 'video/GETS_SUCCESS';
+const GETS_NEXT_SUCCESS = 'video/GETS_NEXT_SUCCESS';
+const GETS_FAIL = 'video/GETS_FAIL';
 
 const initialState = {
   items: [],
   loaded: false,
-  loading: false
+  loading: false,
+  hasNext: false
 };
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
@@ -20,7 +22,16 @@ export default function reducer(state = initialState, action = {}) {
         ...state,
         loading: false,
         loaded: true,
-        items: action.body.items
+        items: action.body.items,
+        hasNext: action.hasNext
+      };
+    case GETS_NEXT_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        loaded: true,
+        items: state.items.concat(action.body.items),
+        hasNext: action.hasNext
       };
     case GETS_FAIL:
       return {

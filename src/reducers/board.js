@@ -15,6 +15,8 @@ const RESET_PAN = 'board/RESET_PAN';
 const CONFIG_MODE = 'board/CONFIG_MODE';
 const DISPLAY_MODE = 'board/DISPLAY_MODE';
 const EDIT_MODE = 'board/EDIT_MODE';
+const ADD_MODE = 'board/ADD_MODE';
+const UPLOAD_MODE = 'board/UPLOAD_MODE';
 
 const initialState = {
   scale: 1,
@@ -43,14 +45,14 @@ export default function reducer(state = initialState, action = {}) {
         ...state,
         loading: false,
         loaded: true,
-        items: action.res.items
+        items: action.body.items
       };
     case GETS_FAIL:
       return {
         ...state,
         loading: false,
         loaded: false,
-        error: action.error
+        error: action.err
       };
     case GET_START:
       return {
@@ -62,14 +64,14 @@ export default function reducer(state = initialState, action = {}) {
         ...state,
         loading: false,
         loaded: true,
-        item: action.res
+        item: action.body
       };
     case GET_FAIL:
       return {
         ...state,
         loading: false,
         loaded: false,
-        error: action.error
+        error: action.err
       };
     case MOVE_START:
       return {
@@ -119,6 +121,20 @@ export default function reducer(state = initialState, action = {}) {
       return {
         ...state,
         mode: 'edit',
+        scale: 1
+      };
+    }
+    case ADD_MODE: {
+      return {
+        ...state,
+        mode: 'add',
+        scale: 1
+      };
+    }
+    case UPLOAD_MODE: {
+      return {
+        ...state,
+        mode: 'upload',
         scale: 1
       };
     }
@@ -181,14 +197,27 @@ export function configMode() {
     type: CONFIG_MODE
   };
 }
+
 export function editMode() {
   return {
     type: EDIT_MODE
   };
 }
 
+export function addMode() {
+  return {
+    type: ADD_MODE
+  };
+}
+
 export function displayMode() {
   return {
     type: DISPLAY_MODE
+  };
+}
+
+export function uploadMode() {
+  return {
+    type: UPLOAD_MODE
   };
 }

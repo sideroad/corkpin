@@ -1,8 +1,14 @@
 import { normalize, proxy } from 'koiki';
 import cloudinary from 'cloudinary';
+import multer from 'multer';
+import path from 'path';
+import fs from 'fs-extra';
+import isVideo from 'is-video';
+
 import uris from '../uris';
 import config from '../config';
 
+const upload = multer({ dest: './tmp/' });
 const apiBase = normalize(`${config.api.host}:${config.api.port}`);
 
 cloudinary.config({
@@ -17,12 +23,26 @@ export default function (app) {
     'x-chaus-secret': config.chaus.secret
   };
 
+  app.post('/upload/files', upload.fields([{ name: 'files' }]), (req, res) => {
+    const paths = [];
+    const promises = req.files.files.map(file => new Promise((resolve) => {
+      const filepath = `${file.path}${path.extname(file.originalname)}`;
+      fs.move(file.path, filepath, () => resolve());
+      paths.push(path.parse(filepath).base);
+    }));
+    Promise.all(promises).then(
+      () => res.json({
+        paths
+      })
+    );
+  });
+
   proxy({
     app,
     protocol: 'https',
     host: config.api.host,
     prefix: '/bff',
-    before: (url, options, cb) => console.log(options) || cb([url, {
+    before: (url, options, cb) => cb([url, {
       ...options,
       headers: {
         ...options.headers,
@@ -32,9 +52,29 @@ export default function (app) {
     customizer: {
       [uris.apis.images]: {
         POST: {
-          before: (url, options, cb) => {
+          before: (url, options, cb, reject) => {
             const json = JSON.parse(options.body);
-            cloudinary.uploader.upload(json.url, (result) => {
+            let file = json.url;
+            if (json.fromUploader) {
+              if (file.match(/\.\./)) {
+                reject({
+                  file: 'Invalid filepath'
+                }, 400);
+                return;
+              }
+              file = path.join('tmp', file);
+            }
+            cloudinary.uploader.upload(file, (result) => {
+              if (json.fromUploader) {
+                fs.remove(file);
+              }
+              if (result.error) {
+                console.error(result.error);
+                reject({
+                  file: result.error
+                });
+                return;
+              }
               json.url = result.secure_url;
               cb([url, {
                 ...options,
@@ -45,7 +85,7 @@ export default function (app) {
                   'content-length': JSON.stringify(json).length
                 }
               }]);
-            });
+            }, { resource_type: isVideo(json.url) ? 'video' : 'auto' });
           }
         },
         GET: {

@@ -54,7 +54,7 @@ const SelectAlbum = ({ route, push, albums, params, user }, { i18n, lang, fetche
                 const promises = item.images.map(image =>
                   fetcher.image
                     .save({
-                      board: res.id,
+                      board: res.body.id,
                       photo: image.id,
                       name: image.name,
                       url: image.url,
@@ -67,15 +67,15 @@ const SelectAlbum = ({ route, push, albums, params, user }, { i18n, lang, fetche
                 promises.push(
                   fetcher.allow
                     .save({
-                      board: res.id,
+                      board: res.body.id,
                       user: user.id
                     })
                 );
-                return Promise.all(promises).then(() => ({ id: res.id }));
+                return Promise.all(promises).then(() => ({ id: res.body.id }));
               }
             )
             .then(
-              res => push(stringify(uris.pages.board, { lang, id: res.id }))
+              res => push(stringify(uris.pages.board, { lang, id: res.body.id }))
             )
             .catch(
               err => console.error(err)

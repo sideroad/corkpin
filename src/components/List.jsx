@@ -1,8 +1,9 @@
 import React, { PropTypes } from 'react';
+import VisibilitySensor from 'react-visibility-sensor';
 
 const styles = require('../css/list.less');
 
-const List = ({ className, hover, theme, position, items, onClick }) =>
+const List = ({ className, hover, theme, position, items, onClick, onReachToBottom }) =>
   <ul className={`${styles.list} ${styles[hover]} ${styles[theme]} ${styles[position]} ${className}`} >
     {
       items.map(item =>
@@ -11,10 +12,10 @@ const List = ({ className, hover, theme, position, items, onClick }) =>
           className={styles.item}
         >
           <button
-            className={styles.link}
+            className={`${styles.link} ${item.selected ? styles.selected : ''}`}
             onClick={(evt) => {
               evt.preventDefault();
-              onClick(item);
+              onClick(item, !item.selected);
             }}
           >
             <div
@@ -22,13 +23,26 @@ const List = ({ className, hover, theme, position, items, onClick }) =>
               style={{ backgroundImage: `url(${item.image})` }}
             />
             <div
-              className={styles.outline}
+              className={`${styles.outline} ${item.name ? '' : styles.none}`}
             />
-            <div className={styles.text} >{item.name}</div>
+            {
+              item.name ? <div className={styles.text} >{item.name}</div> : ''
+            }
           </button>
         </li>
       )
     }
+    <li>
+      <VisibilitySensor
+        onChange={
+          (isVisible) => {
+            if (isVisible) {
+              onReachToBottom();
+            }
+          }
+        }
+      />
+    </li>
   </ul>;
 
 List.propTypes = {
@@ -37,7 +51,8 @@ List.propTypes = {
   hover: PropTypes.oneOf(['unveil', 'cover']).isRequired,
   theme: PropTypes.oneOf(['classic', 'pop']).isRequired,
   position: PropTypes.oneOf(['top', 'middle', 'bottom']).isRequired,
-  onClick: PropTypes.func.isRequired
+  onClick: PropTypes.func.isRequired,
+  onReachToBottom: PropTypes.func.isRequired
 };
 
 List.defaultProps = {
@@ -46,7 +61,8 @@ List.defaultProps = {
   onClick: evt => evt.preventDefault(),
   hover: 'unveil',
   theme: 'classic',
-  position: 'middle'
+  position: 'middle',
+  onReachToBottom: () => {}
 };
 
 export default List;

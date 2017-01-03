@@ -1,5 +1,13 @@
+@import "variables.less";
 
 .list {
   top: 30%;
   margin-bottom: 20%;
+  position: absolute;
+}
+
+@media(max-width: @smart-width) {
+  .list {
+    top: 40%!important;
+  }
 }

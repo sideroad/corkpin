@@ -4,13 +4,14 @@ import Input from '../components/Input';
 import Selector from '../components/Selector';
 import Suggest from '../components/Suggest';
 import IconButton from '../components/IconButton';
+import Modal from '../components/Modal';
 
 const styles = require('../css/settings.less');
 
 // TODO: Be able to add images/videos, Delete images/videos
 const Settings = ({
-  userId,
   display,
+  userId,
   name,
   background,
   backgrounds,
@@ -24,17 +25,11 @@ const Settings = ({
   onDeleteUser,
   onClose
 }) =>
-  <div
-    className={`${styles.settings} ${display ? styles.show : styles.hide}`}
+  <Modal
+    display={display}
+    className={styles.settings}
+    onClose={onClose}
   >
-    <button
-      className={styles.close}
-      onClick={
-        () => onClose()
-      }
-    >
-      <i className="fa fa-eject" />
-    </button>
     <dl>
       <dt>Name</dt>
       <dd>
@@ -92,11 +87,11 @@ const Settings = ({
         </div>
       </dd>
     </dl>
-  </div>;
+  </Modal>;
 
 Settings.propTypes = {
-  userId: PropTypes.string.isRequired,
   display: PropTypes.bool.isRequired,
+  userId: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   background: PropTypes.object.isRequired,
   backgrounds: PropTypes.array.isRequired,

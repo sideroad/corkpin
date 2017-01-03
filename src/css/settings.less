@@ -1,49 +1,5 @@
 @import "variables.less";
 
-.show {
-	opacity: 1;
-	transform: translateY(0%);
-}
-.hide {
-	opacity: 0;
-	transform: translateY(500%);
-}
-
-.close {
-	position: absolute;
-	bottom: 10px;
-	left: 50%;
-	border: none;
-	font-size: 30px;
-	transform: translateX(-50%);
-}
-
-.close i{
-	color: @sumi;
-	transition-property: transform, color;
-	transition-duration: 0.4s;
-}
-
-.close:hover i{
-	color: @tsuyukusa;
-	transform: rotateX(180deg);
-}
-
-.settings {
-	position: absolute;
-  width: 80%;
-  top: 0;
-  background: @gofun;
-  margin: 10%;
-  border-radius: 3px;
-  box-shadow: @shadow;
-	font-size: 1.5em;
-	color: @shikkoku;
-	transition-property: transform, opacity;
-	transition-duration: 0.4s;
-	padding-bottom: 50px;
-}
-
 .settings dt {
   width: 80%;
   margin-top: 20px;

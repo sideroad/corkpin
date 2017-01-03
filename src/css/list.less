@@ -1,7 +1,6 @@
 @import "variables.less";
 
 .list{
-  position: absolute;
   display: flex;
   width: 100%;
   margin: 0;
@@ -10,8 +9,6 @@
   justify-content: center;
   list-style-type: none;
   align-content: flex-start;
-  left: 50%;
-  transform: translateX(-50%);
 }
 
 .item{
@@ -34,6 +31,20 @@
   background-position: 50%;
   width: 100%;
   height: 100%;
+}
+
+
+.unveil.classic .item .link.selected .back,
+.cover.classic .item .link.selected .back,
+.unveil.pop .item .link.selected .back,
+.cover.pop .item .link.selected .back,
+.unveil.classic .item:nth-child(odd) .link.selected .back,
+.cover.classic .item:nth-child(odd) .link.selected:hover .back,
+.unveil.pop .item:nth-child(odd) .link.selected .back,
+.cover.pop .item:nth-child(odd) .link.selected:hover .back{
+  transition-property: filter;
+  transition-duration: 0.4s;
+	filter: grayscale(100%) brightness(0.2);
 }
 
 .unveil .link:hover .back,
@@ -69,6 +80,11 @@
   background-color: @gofun;
   transition-property: top, opacity, height, margin;
   transition-duration: 0.4s;
+}
+
+.unveil .none.outline,
+.cover .none.outline{
+  height: 0;
 }
 
 .unveil .outline,

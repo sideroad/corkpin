@@ -19,7 +19,7 @@ export default {
       clientID: config.facebook.appId,
       clientSecret: config.facebook.secret,
       callbackURL: `${config.app.base}/auth/facebook/callback`,
-      profileFields: ['id', 'albums', 'photos']
+      profileFields: ['id', 'albums', 'photos', 'friends']
     }, (accessToken, refreshToken, profile, cb) =>
       cb(null, { ...profile, token: accessToken })
     ));

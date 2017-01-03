@@ -2,12 +2,11 @@ import config from './config';
 
 const base = config.app.base;
 
-// TODO: Move every API to bff with secret, client ID with chaus
 export default {
   album: {
     gets: {
       url: 'https://graph.facebook.com/v2.8/me/albums',
-      after: (values, res) => {
+      after: (values, { body: res }) => {
         const token = values.access_token;
         const albums = res.data;
         const promises = albums.map(album =>
@@ -61,12 +60,16 @@ export default {
     update: {
       method: 'POST',
       url: `${base}/bff/apis/board/images/:id`
+    },
+    delete: {
+      method: 'DELETE',
+      url: `${base}/bff/apis/board/images/:id`
     }
   },
   allow: {
     gets: {
       url: `${base}/bff/apis/board/allows`,
-      after: (values, res) => {
+      after: (values, { body: res }) => {
         const token = values.access_token;
         const allows = res.items;
         const promises = allows.map(allow =>
@@ -97,19 +100,53 @@ export default {
       url: `${base}/bff/apis/board/backgrounds`
     }
   },
+  media: {
+    gets: {
+      url: 'https://graph.facebook.com/v2.8/me/photos',
+      after: (values, { body: res }) => Promise.resolve({
+        items: res.data.map(item => ({
+          id: item.id,
+          name: item.name,
+          image: item.source
+        })),
+        next: res.paging.next
+      }),
+      defaults: {
+        fields: 'source,description',
+        type: 'uploaded'
+      },
+      next: action => action.next
+    }
+  },
+  video: {
+    gets: {
+      url: 'https://graph.facebook.com/v2.8/me/videos',
+      after: (values, { body: res }) => Promise.resolve({
+        items: res.data.map(item => ({
+          id: item.id,
+          name: item.name,
+          image: item.picture,
+          video: item.source
+        })),
+        next: res.paging.next
+      }),
+      defaults: {
+        fields: 'source,description,picture',
+        type: 'uploaded'
+      },
+      next: action => action.next
+    }
+  },
   user: {
     gets: {
       url: 'https://graph.facebook.com/v2.8/me/friends',
-      after: (values, res) =>
-        new Promise((resolve) => {
-          resolve({
-            items: res.data.map(item => ({
-              id: item.id,
-              name: item.name,
-              image: `https://graph.facebook.com/v2.8/${item.id}/picture?access_token=${values.access_token}`
-            }))
-          });
-        })
+      after: (values, { body: res }) => Promise.resolve({
+        items: res.data.map(item => ({
+          id: item.id,
+          name: item.name,
+          image: `https://graph.facebook.com/v2.8/${item.id}/picture?access_token=${values.access_token}`
+        }))
+      })
     }
   }
 };
