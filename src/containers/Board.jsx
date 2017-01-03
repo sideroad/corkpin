@@ -325,7 +325,7 @@ class Board extends Component {
           <i className="fa fa-cog" />
         </button>
         <Uploader
-          lead={'Upload from your device'}
+          lead={'Drop files to upload'}
           display={mode === 'upload'}
           onClose={
             () => editMode()

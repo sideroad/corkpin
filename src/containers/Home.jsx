@@ -7,8 +7,9 @@ import Header from '../components/Header';
 import Background from '../components/Background';
 import Signature from '../components/Signature';
 import Footer from '../components/Footer';
+import { configMode } from '../reducers/board';
 
-const Home = ({ route, push, user }, { i18n, lang, fetcher, cookie }) =>
+const Home = ({ route, push, user, configMode }, { i18n, lang, fetcher, cookie }) =>
   <div>
     <Header homeURL={stringify(uris.pages.root, { lang })} />
     <Background image={require('../images/bg.png')} >
@@ -37,7 +38,10 @@ const Home = ({ route, push, user }, { i18n, lang, fetcher, cookie }) =>
                   .then(() => ({ id: res.body.id }))
             )
             .then(
-              res => push(stringify(uris.pages.board, { lang, id: res.id }))
+              (res) => {
+                configMode();
+                push(stringify(uris.pages.board, { lang, id: res.id }));
+              }
             )
             .catch(
               err => console.error(err)
@@ -58,7 +62,8 @@ const Home = ({ route, push, user }, { i18n, lang, fetcher, cookie }) =>
 Home.propTypes = {
   route: PropTypes.object.isRequired,
   push: PropTypes.func.isRequired,
-  user: PropTypes.object.isRequired
+  user: PropTypes.object.isRequired,
+  configMode: PropTypes.func.isRequired
 };
 
 Home.contextTypes = {
@@ -74,7 +79,8 @@ const connected = connect(
     user: state.user.item
   }),
   {
-    push
+    push,
+    configMode
   }
 )(Home);
 

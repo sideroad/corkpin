@@ -19,13 +19,16 @@ const Uploader = ({
     <div className={styles.selector}>
       <div className={styles.lead}>{lead}</div>
       <Dropzone
+        className={styles.dropzone}
         onDrop={(files) => {
           const req = request.post('/upload/files');
           files.forEach(file => req.attach('files', file));
           req.end((err, res) => onUploaded(err, res));
         }}
       >
-        <div>Try dropping some files here, or click to select files to upload.</div>
+        <div>
+          <i className={`fa fa-file-image-o ${styles.dropicon}`} />
+        </div>
       </Dropzone>
     </div>
   </Modal>;

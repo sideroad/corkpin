@@ -9,10 +9,11 @@ import Signature from '../components/Signature';
 import List from '../components/List';
 import uris from '../uris';
 import { set } from '../reducers/album';
+import { displayMode } from '../reducers/board';
 
 const styles = require('../css/find.less');
 
-const Find = ({ route, push, boards, params, user }, { i18n, lang, fetcher }) =>
+const Find = ({ route, push, boards, params, user, displayMode }, { i18n, lang, fetcher }) =>
   <div className={styles.container}>
     <Header homeURL={stringify(uris.pages.root, { lang })} />
     <Background image={require('../images/bg.png')} >
@@ -45,7 +46,12 @@ const Find = ({ route, push, boards, params, user }, { i18n, lang, fetcher }) =>
         theme="pop"
         hover="cover"
         position="middle"
-        onClick={item => push(stringify(uris.pages.board, { lang, id: item.id }))}
+        onClick={
+          (item) => {
+            displayMode();
+            push(stringify(uris.pages.board, { lang, id: item.id }));
+          }
+        }
       />
     </Background>
   </div>;
@@ -55,7 +61,8 @@ Find.propTypes = {
   push: PropTypes.func.isRequired,
   boards: PropTypes.array.isRequired,
   params: PropTypes.object.isRequired,
-  user: PropTypes.object.isRequired
+  user: PropTypes.object.isRequired,
+  displayMode: PropTypes.func.isRequired
 };
 
 Find.contextTypes = {
@@ -72,7 +79,8 @@ const connected = connect(
   }),
   {
     push,
-    set
+    set,
+    displayMode
   }
 )(Find);
 
