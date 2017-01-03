@@ -3,6 +3,7 @@ import isVideo from 'is-video';
 
 const styles = require('../css/photo.less');
 
+// TODO: Double click or Long tap to open photo viewer to see comments
 class Photo extends Component {
   render() {
     const {
