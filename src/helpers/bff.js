@@ -20,6 +20,7 @@ cloudinary.config({
 export default function (app) {
   const headers = {
     host: config.api.host,
+    'content-type': 'application/json',
     'x-chaus-client': config.chaus.client,
     'x-chaus-secret': config.chaus.secret
   };
@@ -79,11 +80,7 @@ export default function (app) {
     prefix: '/bff',
     before: (url, options, cb) => cb([url, {
       ...options,
-      headers: {
-        ...options.headers,
-        ...headers,
-        'if-none-match': ''
-      }
+      headers
     }]),
     customizer: {
       [uris.apis.images]: {
@@ -115,11 +112,7 @@ export default function (app) {
               cb([url, {
                 ...options,
                 body: JSON.stringify(json),
-                headers: {
-                  ...options.headers,
-                  ...headers,
-                  'content-length': JSON.stringify(json).length
-                }
+                headers
               }]);
             }, { resource_type: isVideo(json.url) ? 'video' : 'auto' });
           }
@@ -160,10 +153,7 @@ export default function (app) {
               .then(
                 () => fetch(`${apiBase}/apis/board/boards/${req.params.id}`, {
                   method: 'POST',
-                  headers: {
-                    ...headers,
-                    'content-type': 'application/json'
-                  },
+                  headers,
                   body: JSON.stringify(req.body)
                 })
               )
