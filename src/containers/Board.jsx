@@ -548,7 +548,8 @@ Board.propTypes = {
 };
 
 Board.contextTypes = {
-  fetcher: PropTypes.object.isRequired
+  fetcher: PropTypes.object.isRequired,
+  lang: PropTypes.string.isRequired
 };
 
 const connected = connect(
