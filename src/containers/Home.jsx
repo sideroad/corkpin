@@ -8,7 +8,7 @@ import Background from '../components/Background';
 import Signature from '../components/Signature';
 import Footer from '../components/Footer';
 
-const Home = ({ route, push, user }, { i18n, lang }) =>
+const Home = ({ route, push, user }, { i18n, lang, fetcher }) =>
   <div>
     <Header homeURL={stringify(uris.pages.root, { lang })} />
     <Background image={require('../images/bg.png')} >
@@ -21,7 +21,27 @@ const Home = ({ route, push, user }, { i18n, lang }) =>
           push(stringify(uris.pages.finding, { lang }));
         }}
         onClickCreate={() => {
-          push(stringify(uris.pages.creating, { lang }));
+          fetcher.board
+            .save({
+              name: 'Untitled',
+              user: user.id,
+              background: 'corkboard'
+            })
+            .then(
+              res =>
+                fetcher.allow
+                  .save({
+                    board: res.body.id,
+                    user: user.id
+                  })
+                  .then(() => ({ id: res.body.id }))
+            )
+            .then(
+              res => push(stringify(uris.pages.board, { lang, id: res.id }))
+            )
+            .catch(
+              err => console.error(err)
+            );
         }}
         onClickStart={() => {
           location.href = uris.pages.login;

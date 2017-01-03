@@ -34,15 +34,23 @@ export default {
       credentials: 'include'
     },
     get: {
-      url: `${base}/bff/apis/board/boards/:id`
+      url: `${base}/bff/apis/board/boards/:id`,
+      credentials: 'include'
     },
     update: {
       method: 'POST',
-      url: `${base}/bff/apis/board/boards/:id`
+      url: `${base}/bff/apis/board/boards/:id`,
+      credentials: 'include'
     },
     save: {
       method: 'POST',
-      url: `${base}/bff/apis/board/boards`
+      url: `${base}/bff/apis/board/boards`,
+      credentials: 'include'
+    },
+    delete: {
+      method: 'DELETE',
+      url: `${base}/bff/apis/board/boards/:id`,
+      credentials: 'include'
     }
   },
   image: {
@@ -51,19 +59,23 @@ export default {
       credentials: 'include'
     },
     get: {
-      url: `${base}/bff/apis/board/images/:id`
+      url: `${base}/bff/apis/board/images/:id`,
+      credentials: 'include'
     },
     save: {
       method: 'POST',
-      url: `${base}/bff/apis/board/images`
+      url: `${base}/bff/apis/board/images`,
+      credentials: 'include'
     },
     update: {
       method: 'POST',
-      url: `${base}/bff/apis/board/images/:id`
+      url: `${base}/bff/apis/board/images/:id`,
+      credentials: 'include'
     },
     delete: {
       method: 'DELETE',
-      url: `${base}/bff/apis/board/images/:id`
+      url: `${base}/bff/apis/board/images/:id`,
+      credentials: 'include'
     }
   },
   allow: {

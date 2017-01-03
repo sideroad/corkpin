@@ -23,6 +23,40 @@ export default function (app) {
     'x-chaus-secret': config.chaus.secret
   };
 
+  const confirmAuth = (req, res) =>
+    new Promise((resolve, reject) => {
+      if (!req.isAuthenticated()) {
+        res.status(400).json({
+          user: 'Must be login with facebook account'
+        });
+        reject();
+      } else {
+        resolve();
+      }
+    });
+
+  const confirmPermission = (req, res) =>
+    new Promise((resolve, reject) => {
+      confirmAuth(req, res)
+        .then(
+          () =>
+            fetch(`${apiBase}/apis/board/allows?user=${req.user.id}&board=${req.params.id}`, {
+              headers
+            })
+        )
+        .then(res => res.json())
+        .then((body) => {
+          if (!body.items.length) {
+            res.status(400).json({
+              user: 'You dont have a permission to manipulate board'
+            });
+            reject();
+          } else {
+            resolve();
+          }
+        });
+    });
+
   app.post('/upload/files', upload.fields([{ name: 'files' }]), (req, res) => {
     const paths = [];
     const promises = req.files.files.map(file => new Promise((resolve) => {
@@ -91,28 +125,68 @@ export default function (app) {
         GET: {
           override: (req, res) => {
             const values = req.query;
-            if (!req.isAuthenticated()) {
-              res.status(400).json({});
-            } else {
-              const user = req.user;
-              fetch(`${apiBase}/apis/board/allows?board=${values.board}&user=${user.id}`, {
-                headers
+            confirmAuth(req, res)
+              .then(
+                () =>
+                  fetch(`${apiBase}/apis/board/allows?board=${values.board}&user=${req.user.id}`, {
+                    headers
+                  })
+              )
+              .then(res => res.json())
+              .then((_res) => {
+                if (!_res.items.length) {
+                  res.status(400).json({
+                    user: 'You dont have a permission to manipulate image'
+                  });
+                  throw new Error();
+                }
+                return;
               })
-                .then(res => res.json())
-                .then((_res) => {
-                  if (!_res.items.length) {
-                    res.status(400).json();
-                    throw new Error();
-                  }
-                  return;
+              .then(() => fetch(`${apiBase}/apis/board/images?board=${values.board}`, {
+                headers
+              }))
+              .then(res => res.json())
+              .then(_res => res.json(_res))
+              .catch(err => console.log(req.originalUrl, err) || res.status(503).json({}));
+          }
+        }
+      },
+      [uris.apis.board]: {
+        POST: {
+          override: (req, res) => {
+            confirmPermission(req, res)
+              .then(
+                () => fetch(`${apiBase}/apis/board/boards/${req.params.id}`, {
+                  method: 'POST',
+                  headers: {
+                    ...headers,
+                    'content-length': JSON.stringify(req.body).length
+                  },
+                  body: JSON.stringify(req.body)
                 })
-                .then(() => fetch(`${apiBase}/apis/board/images?board=${values.board}`, {
+              )
+              .then(res => res.json())
+              .then(body => res.json(body))
+              .catch(err => console.log(req.originalUrl, err) || res.status(503).json({}));
+          }
+        },
+        DELETE: {
+          override: (req, res) => {
+            confirmPermission(req, res)
+              .then(
+                () => fetch(`${apiBase}/apis/board/boards/${req.params.id}`, {
+                  method: 'DELETE',
                   headers
-                }))
-                .then(res => res.json())
-                .then(_res => res.json(_res))
-                .catch(err => console.log(err) || res.json({}));
-            }
+                })
+              )
+              .then(
+                () => fetch(`${apiBase}/apis/board/allows?board=${req.params.id}`, {
+                  method: 'DELETE',
+                  headers
+                })
+              )
+              .then(() => res.json({}))
+              .catch(err => console.log(req.originalUrl, err) || res.status(503).json({}));
           }
         }
       },
@@ -120,41 +194,40 @@ export default function (app) {
         GET: {
           override: (req, res) => {
             const values = req.query;
-            if (!req.isAuthenticated()) {
-              res.status(400).json({});
-            } else {
-              const user = req.user;
-              fetch(`${apiBase}/apis/board/allows?user=${user.id}`, {
-                headers
+            confirmAuth(req, res)
+              .then(
+                () =>
+                  fetch(`${apiBase}/apis/board/allows?user=${req.user.id}`, {
+                    headers
+                  })
+              )
+              .then(res => res.json())
+              .then((res) => {
+                const boards = res.items.map(item => item.board.id);
+                return boards;
               })
-                .then(res => res.json())
-                .then((res) => {
-                  const boards = res.items.map(item => item.board.id);
-                  return boards;
-                })
-                .then(boards => fetch(`${apiBase}/apis/board/boards?id=${boards.join(',')}&name=*${values.query || ''}*`, {
-                  headers
-                }))
-                .then(res => res.json())
-                .then((res) => {
-                  const promises = res.items.map(
-                    item =>
-                      fetch(`${apiBase}/apis/board/images?board=${item.id}&offset=0&limit=1`, {
-                        headers
-                      })
-                        .then(res => res.json())
-                        .then(images => ({
-                          ...item,
-                          image: images.items[0].url
-                        }))
-                  );
-                  return Promise.all(promises).then(items => ({
-                    items
-                  }));
-                })
-                .then(_res => res.json(_res))
-                .catch(err => console.log(err) || res.json({}));
-            }
+              .then(boards => fetch(`${apiBase}/apis/board/boards?id=${boards.join(',')}&name=*${values.query || ''}*`, {
+                headers
+              }))
+              .then(res => res.json())
+              .then((res) => {
+                const promises = res.items.map(
+                  item =>
+                    fetch(`${apiBase}/apis/board/images?board=${item.id}&offset=0&limit=1`, {
+                      headers
+                    })
+                      .then(res => res.json())
+                      .then(images => ({
+                        ...item,
+                        image: images.items.length ? images.items[0].url : ''
+                      }))
+                );
+                return Promise.all(promises).then(items => ({
+                  items
+                }));
+              })
+              .then(_res => res.json(_res))
+              .catch(err => console.log(req.originalUrl, err) || res.status(503).json({}));
           }
         }
       }

@@ -8,7 +8,6 @@ import Modal from '../components/Modal';
 
 const styles = require('../css/settings.less');
 
-// TODO: Be able to add images/videos, Delete images/videos
 const Settings = ({
   display,
   userId,
@@ -23,7 +22,8 @@ const Settings = ({
   onChangeBoardBackground,
   onAddUser,
   onDeleteUser,
-  onClose
+  onClose,
+  onDeleteBoard
 }) =>
   <Modal
     display={display}
@@ -86,6 +86,16 @@ const Settings = ({
           }
         </div>
       </dd>
+      <dt>Danger zone</dt>
+      <dd>
+        <button
+          className={styles.delete}
+          onClick={onDeleteBoard}
+        >
+          <i className="fa fa-trash" />
+          Delete Board
+        </button>
+      </dd>
     </dl>
   </Modal>;
 
@@ -103,7 +113,8 @@ Settings.propTypes = {
   onAddUser: PropTypes.func.isRequired,
   onDeleteUser: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
-  users: PropTypes.array.isRequired
+  users: PropTypes.array.isRequired,
+  onDeleteBoard: PropTypes.func.isRequired
 };
 
 export default Settings;

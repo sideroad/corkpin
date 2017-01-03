@@ -9,6 +9,7 @@ export default {
   },
   apis: {
     images: '/bff/apis/board/images',
-    boards: '/bff/apis/board/boards'
+    boards: '/bff/apis/board/boards',
+    board: '/bff/apis/board/boards/:id'
   }
 };

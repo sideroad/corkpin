@@ -4,6 +4,10 @@ import { connect } from 'react-redux';
 import { asyncConnect } from 'redux-connect';
 import { v4 } from 'uuid';
 import isVideo from 'is-video';
+import { push } from 'react-router-redux';
+import { stringify } from 'koiki';
+
+import uris from '../uris';
 import { changeScale, moveStart, moveEnd, pan, setDefault, resetPan, displayMode, editMode, addMode, configMode, uploadMode } from '../reducers/board';
 import { sizingStart, sizingChange, sizingEnd, draggingStart, draggingEnd } from '../reducers/image';
 import { search as searchUser, blur as blurUser } from '../reducers/user';
@@ -87,8 +91,9 @@ class Board extends Component {
       addMode,
       uploadMode,
       media,
+      push,
     } = this.props;
-    const { fetcher } = this.context;
+    const { fetcher, lang } = this.context;
     return (
       <div className={moving ? styles.grabbing : styles.grab}>
         <Background
@@ -481,6 +486,15 @@ class Board extends Component {
                 })
               )
           }
+          onDeleteBoard={
+            () => fetcher.board
+              .delete({
+                id: params.id,
+              })
+              .then(
+                () => push(stringify(uris.pages.root, { lang }))
+              )
+          }
           onClose={
             () => displayMode()
           }
@@ -530,6 +544,7 @@ Board.propTypes = {
   videos: PropTypes.array.isRequired,
   videoHasNext: PropTypes.bool.isRequired,
   videoIsLoaded: PropTypes.bool.isRequired,
+  push: PropTypes.func.isRequired,
 };
 
 Board.contextTypes = {
@@ -579,7 +594,8 @@ const connected = connect(
     editMode,
     addMode,
     uploadMode,
-    configMode
+    configMode,
+    push
   }
 )(Board);
 

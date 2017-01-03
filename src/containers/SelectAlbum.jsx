@@ -44,7 +44,6 @@ const SelectAlbum = ({ route, push, albums, params, user }, { i18n, lang, fetche
         onClick={(item) => {
           fetcher.board
             .save({
-              album: item.id,
               name: item.name,
               user: user.id,
               background: 'corkboard'
