@@ -19,6 +19,7 @@ cloudinary.config({
 
 export default function (app) {
   const headers = {
+    host: config.api.host,
     'x-chaus-client': config.chaus.client,
     'x-chaus-secret': config.chaus.secret
   };
@@ -160,14 +161,19 @@ export default function (app) {
                   method: 'POST',
                   headers: {
                     ...headers,
-                    'content-length': JSON.stringify(req.body).length
+                    'content-type': 'application/json'
                   },
                   body: JSON.stringify(req.body)
                 })
               )
-              .then(res => res.json())
-              .then(body => res.json(body))
-              .catch(err => console.log(req.originalUrl, err) || res.status(503).json({}));
+              .then((_res) => {
+                if (_res.ok) {
+                  res.json({});
+                } else {
+                  console.log(req.originalUrl, res);
+                  res.status(_res.status).json({});
+                }
+              }).catch(err => console.log(req.originalUrl, err) || res.status(503).json({}));
           }
         },
         DELETE: {
