@@ -8,7 +8,7 @@ import Background from '../components/Background';
 import Signature from '../components/Signature';
 import Footer from '../components/Footer';
 
-const Home = ({ route, push, user }, { i18n, lang, fetcher }) =>
+const Home = ({ route, push, user }, { i18n, lang, fetcher, cookie }) =>
   <div>
     <Header homeURL={stringify(uris.pages.root, { lang })} />
     <Background image={require('../images/bg.png')} >
@@ -44,6 +44,9 @@ const Home = ({ route, push, user }, { i18n, lang, fetcher }) =>
             );
         }}
         onClickStart={() => {
+          cookie.set('redirect', '/', {
+            path: '/'
+          });
           location.href = uris.pages.login;
         }}
         type="starting"
