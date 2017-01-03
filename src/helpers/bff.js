@@ -81,7 +81,8 @@ export default function (app) {
       ...options,
       headers: {
         ...options.headers,
-        ...headers
+        ...headers,
+        'if-none-match': ''
       }
     }]),
     customizer: {
