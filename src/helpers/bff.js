@@ -79,8 +79,9 @@ export default function (app) {
     host: config.api.host,
     prefix: '/bff',
     before: (url, options, cb) => cb([url, {
-      ...options,
-      headers
+      method: options.method,
+      headers,
+      body: options.body
     }]),
     customizer: {
       [uris.apis.images]: {
@@ -114,7 +115,7 @@ export default function (app) {
                 body: JSON.stringify(json),
                 headers
               }]);
-            }, { resource_type: isVideo(json.url) ? 'video' : 'auto' });
+            }, { resource_type: isVideo(json.url) ? 'video' : 'auto', format: 'png' });
           }
         },
         GET: {
