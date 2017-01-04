@@ -36,6 +36,7 @@ export default function reducer(state = initialState, action = {}) {
         items: action.body.items.map(
           item => ({
             ...item,
+            url: item.cloudinary ? `https://res.cloudinary.com/sideroad/image/upload/c_fill,h_${item.height * 2},w_${item.width * 2}/${item.cloudinary}` : item.url,
             sizing: false,
             dragging: false,
             focus: ''
