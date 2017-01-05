@@ -108,7 +108,8 @@ export default function reducer(state = initialState, action = {}) {
       const scale = state.scale + (action.delta / 1500);
       return {
         ...state,
-        scale: scale <= 0 ? 0 : scale
+        scale: scale <= 0.75 ? 0.75 :
+               scale >= 1.25 ? 1.25 : scale
       };
     }
     case DISPLAY_MODE: {
