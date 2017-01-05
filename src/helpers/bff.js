@@ -116,7 +116,10 @@ export default function (app) {
                 body: JSON.stringify(json),
                 headers
               }]);
-            }, { resource_type: isVideo(json.url) ? 'video' : 'auto', format: 'png' });
+            }, {
+              resource_type: isVideo(json.url) ? 'video' : 'auto',
+              format: isVideo(json.url) ? undefined : 'png'
+            });
           }
         },
         GET: {

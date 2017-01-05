@@ -232,7 +232,12 @@ class Board extends Component {
                             id: image.id,
                             width: image.width + (panX - defaultX),
                             height: image.height + (panY - defaultY)
-                          });
+                          })
+                          .then(
+                            () => fetcher.image.gets({
+                              board: params.id
+                            })
+                          );
                       }
                     }
                     onDelete={
