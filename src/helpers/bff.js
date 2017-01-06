@@ -111,7 +111,7 @@ export default function (app) {
                 return;
               }
               json.url = result.secure_url;
-              json.cloudinary = `${result.public_id}.${result.format}`;
+              json.cloudinary = isVideo(json.url) ? '' : `${result.public_id}.${result.format}`;
               cb([url, {
                 ...options,
                 body: JSON.stringify(json),
