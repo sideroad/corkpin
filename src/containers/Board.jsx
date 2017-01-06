@@ -77,7 +77,7 @@ class Board extends Component {
       defaultY,
       allows,
       backgrounds,
-      background = 'corkboard',
+      background = { id: 'corkboard' },
       sizingStart,
       sizingChange,
       sizingEnd,

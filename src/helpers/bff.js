@@ -227,7 +227,7 @@ export default function (app) {
                       .then(res => res.json())
                       .then(images => ({
                         ...item,
-                        image: !images.items.length ? '' :
+                        image: !images.items.length ? `/images/bg-${item.background.id}.jpg` :
                                images.items[0].cloudinary ? `https://res.cloudinary.com/sideroad/image/upload/c_fill,h_400,w_500/${images.items[0].cloudinary}` :
                                images.items[0].url
                       }))
