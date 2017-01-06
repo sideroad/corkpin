@@ -21,6 +21,7 @@ const Signature = props =>
             placeholder={props.find}
             clicked={props.type === 'finding'}
             escaped={props.type !== 'finding'}
+            focused={props.type === 'finding'}
           />
         : ''
       }

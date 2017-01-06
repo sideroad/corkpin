@@ -12,6 +12,12 @@ class InputtableButton extends Component {
     };
   }
 
+  componentDidMount() {
+    if (this.props.focused) {
+      this.input.focus();
+    }
+  }
+
   componentWillReceiveProps(props) {
     const state = {};
     if (props.clicked !== undefined) {
@@ -87,7 +93,8 @@ InputtableButton.propTypes = {
   button: PropTypes.string.isRequired,
   placeholder: PropTypes.string,
   onClick: PropTypes.func,
-  onChange: PropTypes.func
+  onChange: PropTypes.func,
+  focused: PropTypes.bool
 };
 
 export default InputtableButton;
