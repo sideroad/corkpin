@@ -6,6 +6,8 @@ import Modal from '../components/Modal';
 
 const styles = require('../css/uploader.less');
 
+
+// TODO: Add waiting images
 const Uploader = ({
   display,
   onClose,
