@@ -358,7 +358,7 @@ class Board extends Component {
                   fetcher.image.gets({
                     board: params.id
                   }).then(
-                    () => displayMode()
+                    () => editMode()
                   )
               );
             }

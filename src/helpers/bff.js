@@ -38,7 +38,7 @@ export default function (app) {
       }
     });
 
-  const confirmPermission = (req, res) =>
+  const confirmBoardPermission = (req, res) =>
     new Promise((resolve, reject) => {
       confirmAuth(req, res)
         .then(
@@ -57,6 +57,27 @@ export default function (app) {
           } else {
             resolve();
           }
+        });
+    });
+
+  const confirmImagePermission = (req, res) =>
+    new Promise((resolve, reject) => {
+      confirmAuth(req, res)
+        .then(
+          () =>
+            fetch(`${apiBase}/apis/board/allows?board=${req.body.board ? req.body.board : req.query.board}&user=${req.user.id}`, {
+              headers
+            })
+        )
+        .then(res => res.json())
+        .then((allows) => {
+          if (!allows.items.length) {
+            res.status(400).json({
+              user: 'You dont have a permission to manipulate image'
+            });
+            reject();
+          }
+          resolve();
         });
     });
 
@@ -87,67 +108,64 @@ export default function (app) {
     customizer: {
       [uris.apis.images]: {
         POST: {
-          before: (url, options, cb, reject) => {
-            const json = JSON.parse(options.body);
-            let file = json.url;
-            if (json.fromUploader) {
-              if (file.match(/\.\./)) {
-                reject({
-                  file: 'Invalid filepath'
-                }, 400);
-                return;
-              }
-              file = path.join('tmp', file);
-            }
-            cloudinary.uploader.upload(file, (result) => {
-              if (json.fromUploader) {
-                fs.remove(file);
-              }
-              if (result.error) {
-                console.error(result.error);
-                reject({
-                  file: result.error
-                });
-                return;
-              }
-              json.url = result.secure_url;
-              json.cloudinary = isVideo(json.url) ? '' : `${result.public_id}.${result.format}`;
-              cb([url, {
-                ...options,
-                body: JSON.stringify(json),
-                headers
-              }]);
-            }, {
-              resource_type: isVideo(json.url) ? 'video' : 'auto',
-              format: isVideo(json.url) ? undefined : 'png'
-            });
+          override: (req, res) => {
+            confirmImagePermission(req, res)
+              .then(
+                () =>
+                  new Promise((resolve, reject) => {
+                    const body = req.body;
+                    let file = body.url;
+                    if (body.fromUploader) {
+                      if (file.match(/\.\./)) {
+                        reject({
+                          file: 'Invalid filepath'
+                        }, 400);
+                        return;
+                      }
+                      file = path.join('tmp', file);
+                    }
+                    cloudinary.uploader.upload(file, (result) => {
+                      if (body.fromUploader) {
+                        fs.remove(file);
+                      }
+                      if (result.error) {
+                        console.error(result.error);
+                        reject({
+                          file: result.error
+                        });
+                        return;
+                      }
+                      body.url = result.secure_url;
+                      body.cloudinary = isVideo(body.url) ? '' : `${result.public_id}.${result.format}`;
+                      resolve(body);
+                    }, {
+                      resource_type: isVideo(body.url) ? 'video' : 'auto',
+                      format: isVideo(body.url) ? undefined : 'png',
+                      tags: [body.board]
+                    });
+                  })
+              )
+              .then(
+                body =>
+                  fetch(`${apiBase}/apis/board/images`, {
+                    method: 'POST',
+                    headers,
+                    body: JSON.stringify(body)
+                  })
+              )
+              .then(res => res.json())
+              .then(images => res.json(images))
+              .catch(err => console.log(req.originalUrl, err) || res.status(503).json({}));
           }
         },
         GET: {
           override: (req, res) => {
-            const values = req.query;
-            confirmAuth(req, res)
-              .then(
-                () =>
-                  fetch(`${apiBase}/apis/board/allows?board=${values.board}&user=${req.user.id}`, {
-                    headers
-                  })
-              )
-              .then(res => res.json())
-              .then((_res) => {
-                if (!_res.items.length) {
-                  res.status(400).json({
-                    user: 'You dont have a permission to manipulate image'
-                  });
-                  throw new Error();
-                }
-                return;
-              })
-              .then(() => fetch(`${apiBase}/apis/board/images?board=${values.board}`, {
+            confirmImagePermission(req, res)
+              .then(() => fetch(`${apiBase}/apis/board/images?board=${req.query.board}`, {
                 headers
               }))
               .then(res => res.json())
-              .then(_res => res.json(_res))
+              .then(images => res.json(images))
               .catch(err => console.log(req.originalUrl, err) || res.status(503).json({}));
           }
         }
@@ -155,7 +173,7 @@ export default function (app) {
       [uris.apis.board]: {
         POST: {
           override: (req, res) => {
-            confirmPermission(req, res)
+            confirmBoardPermission(req, res)
               .then(
                 () => fetch(`${apiBase}/apis/board/boards/${req.params.id}`, {
                   method: 'POST',
@@ -174,7 +192,7 @@ export default function (app) {
         },
         GET: {
           override: (req, res) => {
-            confirmPermission(req, res)
+            confirmBoardPermission(req, res)
               .then(
                 () => fetch(`${apiBase}/apis/board/boards/${req.params.id}`, {
                   method: 'GET',
@@ -190,8 +208,13 @@ export default function (app) {
         },
         DELETE: {
           override: (req, res) => {
-            confirmPermission(req, res)
+            confirmBoardPermission(req, res)
               .then(
+                () => fetch(`${apiBase}/apis/board/images?board=${req.params.id}`, {
+                  method: 'DELETE',
+                  headers
+                })
+              ).then(
                 () => fetch(`${apiBase}/apis/board/boards/${req.params.id}`, {
                   method: 'DELETE',
                   headers
