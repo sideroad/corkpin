@@ -273,7 +273,7 @@ class Board extends Component {
             () => uploadMode()
           }
         >
-          <i className="fa fa-plus-circle" />
+          <i className="fa fa-picture-o" />
         </button>
         <button
           className={`${styles.centering} ${mode === 'edit' ? styles.editing : ''}`}
