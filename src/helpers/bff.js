@@ -4,6 +4,7 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs-extra';
 import isVideo from 'is-video';
+import _ from 'lodash';
 
 import uris from '../uris';
 import config from '../config';
@@ -198,22 +199,27 @@ export default function (app) {
             const values = req.query;
             confirmAuth(req, res)
               .then(
-                () =>
-                  fetch(`${apiBase}/apis/board/allows?user=${req.user.id}`, {
-                    headers
-                  })
+                () => new Promise((resolve, reject) =>
+                  Promise.all([
+                    fetch(`${apiBase}/apis/board/allows?user=${req.user.id}`, {
+                      headers
+                    })
+                    .then(_res => _res.json()),
+                    fetch(`${apiBase}/apis/board/boards?name=*${values.query || ''}*`, {
+                      headers
+                    })
+                    .then(_res => _res.json()),
+                  ]).then(
+                    ([allows, boards]) => {
+                      resolve(boards.items.filter(board =>
+                        _.find(allows.items, allow => allow.board.id === board.id) !== undefined
+                      ));
+                    }
+                  ).catch(err => reject(err))
+                )
               )
-              .then(res => res.json())
-              .then((res) => {
-                const boards = res.items.map(item => item.board.id);
-                return boards;
-              })
-              .then(boards => fetch(`${apiBase}/apis/board/boards?id=${boards.join(',')}&name=*${values.query || ''}*`, {
-                headers
-              }))
-              .then(res => res.json())
-              .then((res) => {
-                const promises = res.items.map(
+              .then((boards) => {
+                const promises = boards.map(
                   item =>
                     fetch(`${apiBase}/apis/board/images?board=${item.id}&offset=0&limit=1`, {
                       headers
@@ -221,14 +227,16 @@ export default function (app) {
                       .then(res => res.json())
                       .then(images => ({
                         ...item,
-                        image: images.items.length ? images.items[0].url : ''
+                        image: !images.items.length ? '' :
+                               images.items[0].cloudinary ? `https://res.cloudinary.com/sideroad/image/upload/c_fill,h_400,w_500/${images.items[0].cloudinary}` :
+                               images.items[0].url
                       }))
                 );
                 return Promise.all(promises).then(items => ({
                   items
                 }));
               })
-              .then(_res => res.json(_res))
+              .then(boards => res.json(boards))
               .catch(err => console.log(req.originalUrl, err) || res.status(503).json({}));
           }
         }
