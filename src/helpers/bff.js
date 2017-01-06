@@ -167,10 +167,25 @@ export default function (app) {
                 if (_res.ok) {
                   res.json({});
                 } else {
-                  console.log(req.originalUrl, res);
                   res.status(_res.status).json({});
                 }
               }).catch(err => console.log(req.originalUrl, err) || res.status(503).json({}));
+          }
+        },
+        GET: {
+          override: (req, res) => {
+            confirmPermission(req, res)
+              .then(
+                () => fetch(`${apiBase}/apis/board/boards/${req.params.id}`, {
+                  method: 'GET',
+                  headers
+                })
+              )
+              .then(res => res.json())
+              .then((board) => {
+                res.json(board);
+              })
+              .catch(err => console.log(req.originalUrl, err) || res.status(503).json({}));
           }
         },
         DELETE: {
