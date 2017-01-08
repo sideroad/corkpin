@@ -60,6 +60,28 @@ export default function (app) {
         });
     });
 
+  const confirmBoardOwnerPermission = (req, res) =>
+    new Promise((resolve, reject) => {
+      confirmAuth(req, res)
+        .then(
+          () =>
+            fetch(`${apiBase}/apis/board/boards/${req.params.id}`, {
+              headers
+            })
+        )
+        .then(res => res.json())
+        .then((body) => {
+          if (body.user !== req.user.id) {
+            res.status(400).json({
+              user: 'You dont have a permission to manipulate board'
+            });
+            reject();
+          } else {
+            resolve();
+          }
+        });
+    });
+
   const confirmImagePermission = (req, res) =>
     new Promise((resolve, reject) => {
       confirmAuth(req, res)
@@ -208,7 +230,7 @@ export default function (app) {
         },
         DELETE: {
           override: (req, res) => {
-            confirmBoardPermission(req, res)
+            confirmBoardOwnerPermission(req, res)
               .then(
                 () => fetch(`${apiBase}/apis/board/images?board=${req.params.id}`, {
                   method: 'DELETE',

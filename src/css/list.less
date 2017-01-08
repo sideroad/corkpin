@@ -17,6 +17,10 @@
   position: relative;
 }
 
+.unclickable{
+  pointer-events: none;
+}
+
 .link{
   width: 100%;
   height: 100%;
@@ -34,14 +38,10 @@
 }
 
 
-.unveil.classic .item .link.selected .back,
-.cover.classic .item .link.selected .back,
-.unveil.pop .item .link.selected .back,
-.cover.pop .item .link.selected .back,
-.unveil.classic .item:nth-child(odd) .link.selected .back,
-.cover.classic .item:nth-child(odd) .link.selected:hover .back,
-.unveil.pop .item:nth-child(odd) .link.selected .back,
-.cover.pop .item:nth-child(odd) .link.selected:hover .back{
+.unveil .item .link.selected .back,
+.cover .item .link.selected .back,
+.unveil .item:nth-child(odd) .link.selected .back,
+.cover .item:nth-child(odd) .link.selected:hover .back{
   transition-property: filter;
   transition-duration: 0.4s;
 	filter: grayscale(100%) brightness(0.2);
@@ -123,12 +123,13 @@
   position: absolute;
   font-size: 1.3em;
   overflow: hidden;
-  white-space: nowrap;
   text-overflow: ellipsis;
   transition-property: color;
   transition-duration: 0.4s;
   width: 100%;
   text-align: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .middle .text{
@@ -158,4 +159,8 @@
 .cover .text{
   color: @sumi;
   opacity: 0.8;
+}
+
+.teaser{
+
 }

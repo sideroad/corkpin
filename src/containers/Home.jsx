@@ -6,8 +6,11 @@ import uris from '../uris';
 import Header from '../components/Header';
 import Background from '../components/Background';
 import Signature from '../components/Signature';
+import List from '../components/List';
 import Footer from '../components/Footer';
 import { configMode } from '../reducers/board';
+
+const styles = require('../css/home.less');
 
 const Home = ({ route, push, user, configMode }, { i18n, lang, fetcher, cookie }) =>
   <div>
@@ -55,8 +58,37 @@ const Home = ({ route, push, user, configMode }, { i18n, lang, fetcher, cookie }
         }}
         type="starting"
       />
+      <div
+        className={styles.block}
+      >
+        <h1
+          className={styles.header}
+        >Corkpin For...</h1>
+        <List
+          theme="pop"
+          position="bottom"
+          nowrap={false}
+          items={[
+            {
+              id: 'albums',
+              image: '/images/bg-corkboard.jpg',
+              name: 'Trip, party album. Make and share with your friends'
+            },
+            {
+              id: 'portfolio',
+              image: '/images/bg-corkboard.jpg',
+              name: 'Portfolio. Gather your favorite item photos'
+            },
+            {
+              id: 'greeting',
+              image: '/images/bg-corkboard.jpg',
+              name: 'Greeting. Post card and greeting all over the world'
+            }
+          ]}
+        />
+        <Footer privacyPolicyURL={stringify(uris.pages.privacy, { lang })} />
+      </div>
     </Background>
-    <Footer privacyPolicyURL={stringify(uris.pages.privacy, { lang })} />
   </div>;
 
 Home.propTypes = {

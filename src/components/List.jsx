@@ -3,7 +3,7 @@ import VisibilitySensor from 'react-visibility-sensor';
 
 const styles = require('../css/list.less');
 
-const List = ({ className, hover, theme, position, items, onClick, onReachToBottom }) =>
+const List = ({ className, hover, theme, position, items, onClick, onReachToBottom, nowrap }) =>
   <ul className={`${styles.list} ${styles[hover]} ${styles[theme]} ${styles[position]} ${className}`} >
     {
       items.map(item =>
@@ -12,10 +12,12 @@ const List = ({ className, hover, theme, position, items, onClick, onReachToBott
           className={styles.item}
         >
           <button
-            className={`${styles.link} ${item.selected ? styles.selected : ''}`}
+            className={`${styles.link} ${item.selected ? styles.selected : ''} ${!onClick ? styles.unclickable : ''}`}
             onClick={(evt) => {
               evt.preventDefault();
-              onClick(item, !item.selected);
+              if (onClick) {
+                onClick(item, !item.selected);
+              }
             }}
           >
             <div
@@ -26,7 +28,13 @@ const List = ({ className, hover, theme, position, items, onClick, onReachToBott
               className={`${styles.outline} ${item.name ? '' : styles.none}`}
             />
             {
-              item.name ? <div className={styles.text} >{item.name}</div> : ''
+              item.name ?
+                <div
+                  className={styles.text}
+                  style={{
+                    whiteSpace: nowrap ? 'nowrap' : ''
+                  }}
+                >{item.name}</div> : ''
             }
           </button>
         </li>
@@ -51,17 +59,19 @@ List.propTypes = {
   hover: PropTypes.oneOf(['unveil', 'cover']).isRequired,
   theme: PropTypes.oneOf(['classic', 'pop']).isRequired,
   position: PropTypes.oneOf(['top', 'middle', 'bottom']).isRequired,
-  onClick: PropTypes.func.isRequired,
-  onReachToBottom: PropTypes.func.isRequired
+  onClick: PropTypes.func,
+  onReachToBottom: PropTypes.func,
+  nowrap: PropTypes.bool,
 };
 
 List.defaultProps = {
   className: '',
   items: [],
-  onClick: evt => evt.preventDefault(),
+  clickable: true,
   hover: 'unveil',
   theme: 'classic',
   position: 'middle',
+  nowrap: true,
   onReachToBottom: () => {}
 };
 
