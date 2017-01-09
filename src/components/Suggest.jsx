@@ -39,7 +39,6 @@ class Suggest extends Component {
         <Input
           ref={(elem) => { this.input = elem; }}
           icon={`fa-users ${styles.inputIcon}`}
-          value=""
           placeholder="Search and enter to allow users"
           onChange={
             evt => onChange(evt.target.value)

@@ -46,6 +46,7 @@ class Settings extends Component {
           <dt>Title</dt>
           <dd>
             <Input
+              key="board-name"
               icon="fa-sticky-note"
               value={name}
               onBlur={
@@ -101,8 +102,9 @@ class Settings extends Component {
           <dt>Danger zone</dt>
           <dd className={styles.dangerZone}>
             <Input
+              key="danger-text"
               icon="fa-trash"
-              value=""
+              value={this.state.deleteApp}
               className={styles.deleteApp}
               placeholder="Enter board name and click to delete board"
               onChange={

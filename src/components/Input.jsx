@@ -22,7 +22,8 @@ class Input extends Component {
       state.escaped = props.escaped;
     }
     this.setState({
-      ...state
+      ...state,
+      value: props.value
     });
   }
 
