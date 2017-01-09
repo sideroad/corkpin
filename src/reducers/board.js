@@ -12,7 +12,9 @@ const MOVE_END = 'board/MOVE_END';
 const PAN_TO = 'board/PAN_TO';
 const PAN_DEFAULT = 'board/PAN_DEFAULT';
 const RESET_PAN = 'board/RESET_PAN';
+
 const CONFIG_MODE = 'board/CONFIG_MODE';
+const PHOTO_CONFIG_MODE = 'board/PHOTO_CONFIG_MODE';
 const DISPLAY_MODE = 'board/DISPLAY_MODE';
 const EDIT_MODE = 'board/EDIT_MODE';
 const ADD_MODE = 'board/ADD_MODE';
@@ -31,7 +33,10 @@ const initialState = {
   defaultY: 0,
   panStartX: 0,
   panStartY: 0,
-  mode: 'display'
+  mode: 'display',
+  photo: {
+    name: ''
+  }
 };
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
@@ -145,6 +150,13 @@ export default function reducer(state = initialState, action = {}) {
         mode: 'config'
       };
     }
+    case PHOTO_CONFIG_MODE: {
+      return {
+        ...state,
+        photo: action.photo,
+        mode: 'photo-config'
+      };
+    }
     default:
       return state;
   }
@@ -220,5 +232,12 @@ export function displayMode() {
 export function uploadMode() {
   return {
     type: UPLOAD_MODE
+  };
+}
+
+export function photoConfigMode(photo) {
+  return {
+    type: PHOTO_CONFIG_MODE,
+    photo
   };
 }

@@ -8,19 +8,22 @@ class Input extends Component {
     super(props);
     this.state = {
       clicked: props.clicked !== undefined ? props.clicked : false,
-      escaped: props.escaped !== undefined ? props.escaped : false
+      escaped: props.escaped !== undefined ? props.escaped : false,
+      value: props.value || ''
     };
   }
 
   componentWillReceiveProps(props) {
-    const state = {};
+    const state = this.state;
     if (props.clicked !== undefined) {
       state.clicked = props.clicked;
     }
     if (props.escaped !== undefined) {
       state.escaped = props.escaped;
     }
-    this.setState(state);
+    this.setState({
+      ...state
+    });
   }
 
   render() {
@@ -28,14 +31,14 @@ class Input extends Component {
       icon = '',
       className = '',
       placeholder = '',
-      value = '',
       onBlur = () => {},
       onKeyDown = () => {},
       onChange = () => {}
     } = this.props;
     const {
       clicked,
-      escaped
+      escaped,
+      value
     } = this.state;
     return (
       <div
@@ -46,8 +49,13 @@ class Input extends Component {
           ref={(c) => { this.input = c; }}
           className={styles.input}
           placeholder={placeholder}
-          defaultValue={value}
-          onChange={evt => onChange(evt)}
+          value={value}
+          onChange={(evt) => {
+            this.setState({
+              value: evt.target.value
+            });
+            onChange(evt);
+          }}
           onKeyDown={evt => onKeyDown(evt)}
           onBlur={evt => onBlur(evt)}
         />

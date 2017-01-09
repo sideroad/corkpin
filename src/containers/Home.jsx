@@ -63,7 +63,7 @@ const Home = ({ route, push, user, configMode }, { i18n, lang, fetcher, cookie }
       >
         <h1
           className={styles.header}
-        >Corkpin For...</h1>
+        >Corkpin for...</h1>
         <List
           theme="pop"
           position="bottom"

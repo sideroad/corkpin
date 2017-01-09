@@ -25,7 +25,8 @@ class Photo extends Component {
       onSizingEnd,
       sizing,
       focus,
-      onDelete
+      onClickDelete,
+      onClickConfig
     } = this.props;
     return (
       <div
@@ -137,7 +138,7 @@ class Photo extends Component {
                 onClick={
                   (evt) => {
                     evt.preventDefault();
-                    onDelete(id);
+                    onClickDelete(id);
                   }
                 }
               >
@@ -149,6 +150,23 @@ class Photo extends Component {
             className={`${styles.bottom} ${styles.left}`}
           />
           */
+        }
+        {
+          editing ?
+            <div
+              className={styles.config}
+            >
+              <button
+                onClick={
+                  (evt) => {
+                    evt.preventDefault();
+                    onClickConfig(id);
+                  }
+                }
+              >
+                <i className="fa fa-cog" />
+              </button>
+            </div> : ''
         }
       </div>
     );
@@ -174,7 +192,8 @@ Photo.propTypes = {
   dragging: PropTypes.bool.isRequired,
   sizing: PropTypes.bool.isRequired,
   focus: PropTypes.string.isRequired,
-  onDelete: PropTypes.func.isRequired,
+  onClickDelete: PropTypes.func.isRequired,
+  onClickConfig: PropTypes.func.isRequired
 };
 
 export default Photo;

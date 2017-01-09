@@ -43,7 +43,7 @@ class Settings extends Component {
         onClose={onClose}
       >
         <dl>
-          <dt>Name</dt>
+          <dt>Title</dt>
           <dd>
             <Input
               icon="fa-sticky-note"

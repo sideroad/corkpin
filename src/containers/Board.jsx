@@ -8,11 +8,12 @@ import { push } from 'react-router-redux';
 import { stringify } from 'koiki';
 
 import uris from '../uris';
-import { changeScale, moveStart, moveEnd, pan, setDefault, resetPan, displayMode, editMode, addMode, configMode, uploadMode } from '../reducers/board';
+import { changeScale, moveStart, moveEnd, pan, setDefault, resetPan, displayMode, editMode, addMode, configMode, uploadMode, photoConfigMode } from '../reducers/board';
 import { sizingStart, sizingChange, sizingEnd, draggingStart, draggingEnd } from '../reducers/image';
 import { search as searchUser, blur as blurUser } from '../reducers/user';
 import Background from '../components/Background';
 import Settings from '../components/Settings';
+import PhotoSettings from '../components/PhotoSettings';
 import Photo from '../components/Photo';
 import MultiSelector from '../components/MultiSelector';
 import Uploader from '../components/Uploader';
@@ -64,6 +65,7 @@ class Board extends Component {
       mode,
       name,
       images,
+      photo,
       params,
       scale,
       moveStart,
@@ -90,6 +92,7 @@ class Board extends Component {
       editMode,
       addMode,
       uploadMode,
+      photoConfigMode,
       media,
       push,
     } = this.props;
@@ -97,7 +100,7 @@ class Board extends Component {
     return (
       <div className={moving ? styles.grabbing : styles.grab}>
         <Background
-          blur={mode === 'config' || mode === 'add' || mode === 'upload'}
+          blur={mode === 'config' || mode === 'add' || mode === 'upload' || mode === 'photo-config'}
           image={`/images/bg-${background.id}.jpg`}
           overflow="hidden"
           onMoveStart={(evt) => {
@@ -240,7 +243,7 @@ class Board extends Component {
                           );
                       }
                     }
-                    onDelete={
+                    onClickDelete={
                       (id) => {
                         fetcher.image
                           .delete({
@@ -251,6 +254,11 @@ class Board extends Component {
                               board: params.id
                             })
                           );
+                      }
+                    }
+                    onClickConfig={
+                      () => {
+                        photoConfigMode(image);
                       }
                     }
                   />
@@ -506,6 +514,25 @@ class Board extends Component {
             () => displayMode()
           }
         />
+        <PhotoSettings
+          display={mode === 'photo-config'}
+          name={photo.name}
+          onChangePhotoName={
+            name => fetcher.image
+              .update({
+                id: photo.id,
+                name
+              })
+              .then(
+                () => fetcher.image.gets({
+                  board: params.id
+                })
+              )
+          }
+          onClose={
+            () => editMode()
+          }
+        />
       </div>
     );
   }
@@ -535,6 +562,7 @@ Board.propTypes = {
   panY: PropTypes.number.isRequired,
   defaultX: PropTypes.number.isRequired,
   defaultY: PropTypes.number.isRequired,
+  photo: PropTypes.object.isRequired,
   background: PropTypes.object.isRequired,
   moving: PropTypes.bool.isRequired,
   allows: PropTypes.array.isRequired,
@@ -548,6 +576,7 @@ Board.propTypes = {
   addMode: PropTypes.func.isRequired,
   uploadMode: PropTypes.func.isRequired,
   configMode: PropTypes.func.isRequired,
+  photoConfigMode: PropTypes.func.isRequired,
   videos: PropTypes.array.isRequired,
   videoHasNext: PropTypes.bool.isRequired,
   videoIsLoaded: PropTypes.bool.isRequired,
@@ -570,6 +599,7 @@ const connected = connect(
     defaultX: state.board.defaultX,
     defaultY: state.board.defaultY,
     background: state.board.item.background,
+    photo: state.board.photo,
     images: state.image.items,
     backgrounds: state.background.items,
     user: state.user.item,
@@ -603,6 +633,7 @@ const connected = connect(
     addMode,
     uploadMode,
     configMode,
+    photoConfigMode,
     push
   }
 )(Board);
