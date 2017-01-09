@@ -117,6 +117,7 @@ class Settings extends Component {
             />
             <Button
               icon="fa-trash"
+              disabled={this.state.deleteApp !== name}
               className={styles.delete}
               onClick={
                 () => {

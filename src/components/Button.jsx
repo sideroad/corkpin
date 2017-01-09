@@ -28,7 +28,8 @@ class Button extends Component {
       icon = '',
       className = '',
       button,
-      onClick = () => {}
+      onClick = () => {},
+      disabled = false
     } = this.props;
     const {
       clicked,
@@ -40,13 +41,15 @@ class Button extends Component {
                                                        escaped ? styles.escaped : ''}`}
       >
         <button
-          className={styles.button}
+          className={`${styles.button} ${disabled ? styles.disabled : ''}`}
           onClick={() => {
-            this.setState({
-              clicked: true,
-              escaped: false
-            });
-            onClick();
+            if (!disabled) {
+              this.setState({
+                clicked: this.state.clicked !== true,
+                escaped: this.state.clicked === true
+              });
+              onClick();
+            }
           }}
         >
           <i className={`fa ${icon}`} aria-hidden="true" />{button}
@@ -57,6 +60,7 @@ class Button extends Component {
 }
 
 Button.propTypes = {
+  disabled: PropTypes.bool,
   clicked: PropTypes.bool,
   escaped: PropTypes.bool,
   className: PropTypes.string,
