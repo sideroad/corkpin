@@ -65,6 +65,8 @@ const Home = ({ route, push, user, configMode }, { i18n, lang, fetcher, cookie }
           className={styles.header}
         >Corkpin for...</h1>
         <List
+          className={styles.list}
+          hasSpace
           theme="pop"
           position="bottom"
           nowrap={false}

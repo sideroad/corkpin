@@ -3,8 +3,18 @@ import VisibilitySensor from 'react-visibility-sensor';
 
 const styles = require('../css/list.less');
 
-const List = ({ className, hover, theme, position, items, onClick, onReachToBottom, nowrap }) =>
-  <ul className={`${styles.list} ${styles[hover]} ${styles[theme]} ${styles[position]} ${className}`} >
+const List = ({
+  className,
+  hover,
+  theme,
+  position,
+  items,
+  onClick,
+  onReachToBottom,
+  nowrap,
+  hasSpace
+}) =>
+  <ul className={`${styles.list} ${styles[hover]} ${styles[theme]} ${styles[position]} ${className} ${hasSpace ? styles.hasSpace : ''}`} >
     {
       items.map(item =>
         <li
@@ -59,6 +69,7 @@ List.propTypes = {
   hover: PropTypes.oneOf(['unveil', 'cover']).isRequired,
   theme: PropTypes.oneOf(['classic', 'pop']).isRequired,
   position: PropTypes.oneOf(['top', 'middle', 'bottom']).isRequired,
+  hasSpace: PropTypes.bool,
   onClick: PropTypes.func,
   onReachToBottom: PropTypes.func,
   nowrap: PropTypes.bool,
@@ -72,6 +83,7 @@ List.defaultProps = {
   theme: 'classic',
   position: 'middle',
   nowrap: true,
+  hasSpace: false,
   onReachToBottom: () => {}
 };
 

@@ -1,5 +1,3 @@
-import { reducer as form } from 'redux-form';
-
 import allow from './allow';
 import background from './background';
 import user from './user';
@@ -11,7 +9,6 @@ import media from './media';
 import video from './video';
 
 export default {
-  form,
   hobby,
   album,
   board,
