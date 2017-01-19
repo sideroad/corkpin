@@ -17,6 +17,8 @@ import reducers from './reducers';
 import passporter from './helpers/passporter';
 import bff from './helpers/bff';
 
+require('@risingstack/trace');
+
 const app = new Express();
 const pretty = new PrettyError();
 
