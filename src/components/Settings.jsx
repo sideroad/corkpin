@@ -1,11 +1,10 @@
 import React, { PropTypes, Component } from 'react';
 import __ from 'lodash';
-import Input from '../components/Input';
+import { Button, Input } from 'koiki-ui';
 import Selector from '../components/Selector';
 import Suggest from '../components/Suggest';
 import IconButton from '../components/IconButton';
 import Modal from '../components/Modal';
-import Button from '../components/Button';
 
 const styles = require('../css/settings.less');
 
@@ -46,6 +45,7 @@ class Settings extends Component {
           <dt>Title</dt>
           <dd>
             <Input
+              className={styles.title}
               key="board-name"
               icon="fa-sticky-note"
               value={name}
@@ -126,7 +126,7 @@ class Settings extends Component {
                   }
                 }
               }
-              button="Delete Board"
+              text="Delete Board"
             />
           </dd>
         </dl>

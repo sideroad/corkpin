@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react';
-import InputtableButton from '../components/InputtableButton';
-import Button from '../components/Button';
+import { Button, InputtableButton } from 'koiki-ui';
 
 const styles = require('../css/signature.less');
 
@@ -17,11 +16,10 @@ const Signature = props =>
             className={styles.find}
             onClick={props.onClickFind}
             onChange={props.onChangeFind}
-            button={props.find}
+            text={props.find}
             placeholder={props.find}
-            clicked={props.type === 'finding'}
-            escaped={props.type !== 'finding'}
             focused={props.type === 'finding'}
+            progress={props.loadingBoards ? 'loading' : 'none'}
           />
         : ''
       }
@@ -29,11 +27,9 @@ const Signature = props =>
         props.create ?
           <Button
             icon="fa-paint-brush"
-            className={styles.create}
             onClick={props.onClickCreate}
-            button={props.create}
-            clicked={props.type === 'creating'}
-            escaped={props.type !== 'creating'}
+            text={props.create}
+            className={styles.create}
           />
         : ''
       }
@@ -41,11 +37,9 @@ const Signature = props =>
         props.start ?
           <Button
             icon="fa-sign-in"
-            className={styles.start}
             onClick={props.onClickStart}
-            button={props.start}
-            clicked={props.type === 'starting'}
-            escaped={props.type !== 'starting'}
+            text={props.start}
+            className={styles.create}
           />
         : ''
       }
@@ -61,7 +55,8 @@ Signature.propTypes = {
   onClickFind: PropTypes.func,
   onClickCreate: PropTypes.func,
   onClickStart: PropTypes.func,
-  onChangeFind: PropTypes.func
+  onChangeFind: PropTypes.func,
+  loadingBoards: PropTypes.bool
 };
 
 export default Signature;

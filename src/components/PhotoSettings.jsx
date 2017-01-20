@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import Input from '../components/Input';
+import { Input } from 'koiki-ui';
 import Modal from '../components/Modal';
 
 const styles = require('../css/photo-settings.less');

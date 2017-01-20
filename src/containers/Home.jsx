@@ -12,7 +12,7 @@ import { configMode } from '../reducers/board';
 
 const styles = require('../css/home.less');
 
-const Home = ({ route, push, user, configMode }, { i18n, lang, fetcher, cookie }) =>
+const Home = ({ route, push, user, configMode, loadingBoards }, { i18n, lang, fetcher, cookie }) =>
   <div>
     <Header homeURL={stringify(uris.pages.root, { lang })} />
     <Background image={require('../images/bg.png')} >
@@ -21,6 +21,7 @@ const Home = ({ route, push, user, configMode }, { i18n, lang, fetcher, cookie }
         find={user.id ? i18n.find_board : ''}
         create={user.id ? i18n.create : ''}
         start={user.id ? '' : i18n.start}
+        loadingBoards={loadingBoards}
         onClickFind={() => {
           push(stringify(uris.pages.finding, { lang }));
         }}
@@ -97,7 +98,8 @@ Home.propTypes = {
   route: PropTypes.object.isRequired,
   push: PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,
-  configMode: PropTypes.func.isRequired
+  configMode: PropTypes.func.isRequired,
+  loadingBoards: PropTypes.bool.isRequired
 };
 
 Home.contextTypes = {
@@ -110,7 +112,8 @@ Home.contextTypes = {
 
 const connected = connect(
   state => ({
-    user: state.user.item
+    user: state.user.item,
+    loadingBoards: state.board.loading,
   }),
   {
     push,

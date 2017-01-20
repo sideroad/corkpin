@@ -55,7 +55,6 @@
     }
   },
   "dependencies": {
-    "@risingstack/trace": "^3.0.5",
     "babel-core": "^6.5.2",
     "babel-loader": "^6.2.5",
     "babel-plugin-add-module-exports": "^0.1.2",
@@ -82,6 +81,7 @@
     "isomorphic-fetch": "^2.2.0",
     "jsx-loader": "^0.13.2",
     "koiki": "^4.1.12",
+    "koiki-ui": "0.0.23",
     "less": "^2.5.3",
     "less-loader": "^2.2.1",
     "lodash": "^4.17.2",

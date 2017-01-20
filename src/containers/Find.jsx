@@ -13,7 +13,9 @@ import { displayMode } from '../reducers/board';
 
 const styles = require('../css/find.less');
 
-const Find = ({ route, push, boards, params, user, displayMode }, { i18n, lang, fetcher }) =>
+const Find = ({
+  route, push, boards, params, user, displayMode, loadingBoards
+}, { i18n, lang, fetcher }) => console.log(loadingBoards) ||
   <div className={styles.container}>
     <Header homeURL={stringify(uris.pages.root, { lang })} />
     <Background image={require('../images/bg.png')} >
@@ -21,6 +23,7 @@ const Find = ({ route, push, boards, params, user, displayMode }, { i18n, lang, 
         lead={i18n.find_to_meet}
         find={i18n.find_board}
         create={i18n.create}
+        loadingBoards={loadingBoards}
         type="finding"
         onChangeFind={
           (evt) => {
@@ -60,6 +63,7 @@ Find.propTypes = {
   route: PropTypes.object.isRequired,
   push: PropTypes.func.isRequired,
   boards: PropTypes.array.isRequired,
+  loadingBoards: PropTypes.bool.isRequired,
   params: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
   displayMode: PropTypes.func.isRequired
@@ -75,6 +79,7 @@ Find.contextTypes = {
 const connected = connect(
   state => ({
     boards: state.board.items,
+    loadingBoards: state.board.loading,
     user: state.user.item
   }),
   {

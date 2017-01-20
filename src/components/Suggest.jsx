@@ -1,6 +1,6 @@
 import React, { PropTypes, Component } from 'react';
 import TetherComponent from 'react-tether';
-import Input from '../components/Input';
+import { Input } from 'koiki-ui';
 import IconButton from '../components/IconButton';
 
 const styles = require('../css/suggest.less');
@@ -14,6 +14,12 @@ const handleClickOutside = (evt, input, suggest, onBlur) => {
 };
 
 class Suggest extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      query: '',
+    };
+  }
   componentDidMount() {
     this.wrappedHandleClickOutside = evt =>
       handleClickOutside(evt, this.input, this.suggest, this.props.onBlur);
@@ -37,11 +43,18 @@ class Suggest extends Component {
         targetAttachment="bottom left"
       >
         <Input
+          className={styles.text}
           ref={(elem) => { this.input = elem; }}
           icon={`fa-users ${styles.inputIcon}`}
           placeholder="Search and enter to allow users"
+          value={this.state.query}
           onChange={
-            evt => onChange(evt.target.value)
+            (evt) => {
+              this.setState({
+                query: evt.target.value
+              });
+              onChange(evt.target.value);
+            }
           }
         />
         <div
