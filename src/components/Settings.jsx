@@ -1,9 +1,7 @@
 import React, { PropTypes, Component } from 'react';
 import __ from 'lodash';
-import { Button, Input } from 'koiki-ui';
+import { Button, Input, Chips } from 'koiki-ui';
 import Selector from '../components/Selector';
-import Suggest from '../components/Suggest';
-import IconButton from '../components/IconButton';
 import Modal from '../components/Modal';
 
 const styles = require('../css/settings.less');
@@ -67,37 +65,30 @@ class Settings extends Component {
           </dd>
           <dt>People who can see this board</dt>
           <dd>
-            <Suggest
+            <Chips
+              className={styles.chips}
+              icon="fa-users"
+              placeholder="Search and enter to allow users"
               onChange={
                 query => onSearchUser(query)
               }
               onBlur={
                 () => onBlurUser()
               }
-              items={
-                users
-                  .filter(user => !__.find(allows, { id: user.id }))
+              suggests={
+                users.filter(user => !__.find(allows, { id: user.id }))
               }
               onSelect={
                 user => onAddUser(user.id)
               }
-            />
-            <div className={styles.allowedUsers}>
-              {
+              onDelete={
+                user => onDeleteUser(user.id)
+              }
+              chips={
                 allows
                   .filter(user => user.id !== userId)
-                  .map(user =>
-                    <IconButton
-                      key={user.id}
-                      item={user}
-                      onClick={
-                        user => onDeleteUser(user.id)
-                      }
-                      type="delete"
-                    />
-                  )
               }
-            </div>
+            />
           </dd>
           <dt>Danger zone</dt>
           <dd className={styles.dangerZone}>

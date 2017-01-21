@@ -4,7 +4,6 @@ import { Route, IndexRoute } from 'react-router';
 import App from './containers/App';
 import Home from './containers/Home';
 import Find from './containers/Find';
-import SelectAlbum from './containers/SelectAlbum';
 import PrivacyPolicy from './containers/PrivacyPolicy';
 import Board from './containers/Board';
 import NotFound from './containers/NotFound';
@@ -66,7 +65,6 @@ export default (store, cookie) => {
       <IndexRoute component={Home} onEnter={checkAuth} />
       <Route path={uris.pages.privacy} component={PrivacyPolicy} />
       <Route path={uris.pages.finding} component={Find} onEnter={login} />
-      <Route path={uris.pages.creating} component={SelectAlbum} onEnter={login} />
       <Route path={uris.pages.board} component={Board} onEnter={login} />
       { /* Catch all route */ }
       <Route path="*" component={NotFound} status={404} />

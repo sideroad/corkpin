@@ -1,8 +1,7 @@
 import React, { PropTypes, Component } from 'react';
 import Modal from 'react-modal';
+import { Cards } from 'koiki-ui';
 import __ from 'lodash';
-
-import List from '../components/List';
 
 const styles = require('../css/selector.less');
 
@@ -45,8 +44,8 @@ class Selector extends Component {
           className={`${styles.modal} ${isOpen ? styles.show : styles.hide}`}
           overlayClassName={`${styles.overlay} ${isOpen ? styles.showOverlay : styles.hideOverlay}`}
         >
-          <List
-            items={items}
+          <Cards
+            items={items.map(item => ({ ...item, title: item.name }))}
             theme="pop"
             hover="cover"
             position="middle"

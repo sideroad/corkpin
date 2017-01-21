@@ -2,11 +2,11 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { stringify } from 'koiki';
+import { Cards } from 'koiki-ui';
 import uris from '../uris';
 import Header from '../components/Header';
 import Background from '../components/Background';
 import Signature from '../components/Signature';
-import List from '../components/List';
 import Footer from '../components/Footer';
 import { configMode } from '../reducers/board';
 
@@ -65,27 +65,28 @@ const Home = ({ route, push, user, configMode, loadingBoards }, { i18n, lang, fe
         <h1
           className={styles.header}
         >Corkpin for...</h1>
-        <List
+        <Cards
           className={styles.list}
           hasSpace
           theme="pop"
           position="bottom"
           nowrap={false}
+          clickable={false}
           items={[
             {
               id: 'albums',
               image: '/images/bg-corkboard.jpg',
-              name: 'Trip, party album. Make and share with your friends'
+              title: 'Trip, party album. Make and share with your friends'
             },
             {
               id: 'portfolio',
               image: '/images/bg-corkboard.jpg',
-              name: 'Portfolio. Gather your favorite item photos'
+              title: 'Portfolio. Gather your favorite item photos'
             },
             {
               id: 'greeting',
               image: '/images/bg-corkboard.jpg',
-              name: 'Greeting. Post card and greeting all over the world'
+              title: 'Greeting. Post card and greeting all over the world'
             }
           ]}
         />

@@ -2,11 +2,11 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { stringify } from 'koiki';
+import { Cards } from 'koiki-ui';
 import { asyncConnect } from 'redux-connect';
 import Header from '../components/Header';
 import Background from '../components/Background';
 import Signature from '../components/Signature';
-import List from '../components/List';
 import uris from '../uris';
 import { set } from '../reducers/album';
 import { displayMode } from '../reducers/board';
@@ -34,14 +34,14 @@ const Find = ({
           }
         }
       />
-      <List
+      <Cards
         className={styles.list}
         items={
           boards.map(
             board => ({
               ...board,
               id: board.id,
-              name: board.name,
+              title: board.name,
               image: board.image
             })
           )

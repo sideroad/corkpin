@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
+import { Cards } from 'koiki-ui';
 
 import Modal from '../components/Modal';
-import List from '../components/List';
 
 const styles = require('../css/multiselector.less');
 
@@ -19,11 +19,10 @@ const MultiSelector = ({
   >
     <div className={styles.selector}>
       <div className={styles.lead}>{lead}</div>
-      <List
-        items={items}
+      <Cards
+        items={items.map(item => ({ ...item, title: item.name }))}
         theme="pop"
         hover="cover"
-        position="middle"
         onClick={onSelect}
         onReachToBottom={onReachToBottom}
       />
