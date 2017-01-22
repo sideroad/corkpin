@@ -70,7 +70,7 @@ class Settings extends Component {
               icon="fa-users"
               placeholder="Search and enter to allow users"
               onChange={
-                query => onSearchUser(query)
+                evt => onSearchUser(evt.target.value)
               }
               onBlur={
                 () => onBlurUser()
@@ -79,7 +79,7 @@ class Settings extends Component {
                 users.filter(user => !__.find(allows, { id: user.id }))
               }
               onSelect={
-                user => onAddUser(user.id)
+                user => console.log(user) || onAddUser(user.id)
               }
               onDelete={
                 user => onDeleteUser(user.id)
