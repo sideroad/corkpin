@@ -10,7 +10,7 @@ import { stringify } from 'koiki';
 import uris from '../uris';
 import { changeScale, moveStart, moveEnd, pan, setDefault, resetPan, displayMode, editMode, addMode, configMode, uploadMode, photoConfigMode } from '../reducers/board';
 import { sizingStart, sizingChange, sizingEnd, draggingStart, draggingEnd } from '../reducers/image';
-import { search as searchUser, blur as blurUser } from '../reducers/user';
+import { search as searchUser } from '../reducers/user';
 import Background from '../components/Background';
 import Settings from '../components/Settings';
 import PhotoSettings from '../components/PhotoSettings';
@@ -86,7 +86,6 @@ class Board extends Component {
       draggingStart,
       draggingEnd,
       searchUser,
-      blurUser,
       configMode,
       displayMode,
       editMode,
@@ -448,9 +447,6 @@ class Board extends Component {
           onSearchUser={
             query => searchUser(query)
           }
-          onBlurUser={
-            () => blurUser()
-          }
           onChangeBoardName={
             name => fetcher.board
               .update({
@@ -569,7 +565,6 @@ Board.propTypes = {
   media: PropTypes.array.isRequired,
   mediaHasNext: PropTypes.bool.isRequired,
   searchUser: PropTypes.func.isRequired,
-  blurUser: PropTypes.func.isRequired,
   mode: PropTypes.string.isRequired,
   displayMode: PropTypes.func.isRequired,
   editMode: PropTypes.func.isRequired,
@@ -627,7 +622,6 @@ const connected = connect(
     resetPan,
     setDefault,
     searchUser,
-    blurUser,
     displayMode,
     editMode,
     addMode,

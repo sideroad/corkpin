@@ -24,7 +24,6 @@ class Settings extends Component {
       backgrounds,
       allows,
       onSearchUser,
-      onBlurUser,
       users,
       onChangeBoardName,
       onChangeBoardBackground,
@@ -71,9 +70,6 @@ class Settings extends Component {
               placeholder="Search and enter to allow users"
               onChange={
                 evt => onSearchUser(evt.target.value)
-              }
-              onBlur={
-                () => onBlurUser()
               }
               suggests={
                 users.filter(user => !__.find(allows, { id: user.id }))
