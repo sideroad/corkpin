@@ -67,7 +67,7 @@ class Settings extends Component {
             <Chips
               className={styles.chips}
               icon="fa-users"
-              placeholder="Search and enter to allow users"
+              placeholder="Search and select to add user"
               onChange={
                 evt => onSearchUser(evt.target.value)
               }
