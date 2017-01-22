@@ -75,7 +75,7 @@ class Settings extends Component {
                 users.filter(user => !__.find(allows, { id: user.id }))
               }
               onSelect={
-                user => console.log(user) || onAddUser(user.id)
+                user => onAddUser(user.id)
               }
               onDelete={
                 user => onDeleteUser(user.id)
@@ -130,7 +130,6 @@ Settings.propTypes = {
   backgrounds: PropTypes.array.isRequired,
   allows: PropTypes.array.isRequired,
   onSearchUser: PropTypes.func.isRequired,
-  onBlurUser: PropTypes.func.isRequired,
   onChangeBoardName: PropTypes.func.isRequired,
   onChangeBoardBackground: PropTypes.func.isRequired,
   onAddUser: PropTypes.func.isRequired,

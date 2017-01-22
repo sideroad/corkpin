@@ -4,7 +4,6 @@ const GETS_FAIL = 'user/GETS_FAIL';
 
 const SET = 'user/SET';
 const SEARCH = 'user/SEARCH';
-const BLUR = 'user/BLUR';
 
 const initialState = {
   item: {},
@@ -41,11 +40,6 @@ export default function reducer(state = initialState, action = {}) {
         matched: state.items.filter(item => item.name.match(regexp))
       };
     }
-    case BLUR:
-      return {
-        ...state,
-        matched: []
-      };
     case SET:
       return {
         ...state,
@@ -67,11 +61,5 @@ export function search(query) {
   return {
     type: SEARCH,
     query
-  };
-}
-
-export function blur() {
-  return {
-    type: BLUR
   };
 }
