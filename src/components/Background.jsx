@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 
 const styles = require('../css/background.less');
 
-const Background = ({ image, onMoveStart, onMoveEnd, onMove, children, overflow, blur }) =>
+const Background = ({ image, video, onMoveStart, onMoveEnd, onMove, children, overflow, blur }) =>
   <div
     style={{ backgroundImage: `url(${image})`, overflow }}
     className={`${styles.background} ${blur ? styles.blur : ''}`}
@@ -25,11 +25,24 @@ const Background = ({ image, onMoveStart, onMoveEnd, onMove, children, overflow,
       onMoveEnd(evt.touches[0]);
     }}
   >
+    {
+      video ?
+        <video
+          className={styles.video}
+          muted
+          loop
+          autoPlay
+        >
+          <source src={video} />
+        </video>
+        : null
+    }
     {children}
   </div>;
 
 Background.propTypes = {
-  image: PropTypes.string.isRequired,
+  image: PropTypes.string,
+  video: PropTypes.string,
   children: PropTypes.oneOfType([PropTypes.object, PropTypes.array]).isRequired,
   onMoveStart: PropTypes.func,
   onMove: PropTypes.func,
