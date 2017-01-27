@@ -27,14 +27,16 @@ const Background = ({ image, video, onMoveStart, onMoveEnd, onMove, children, ov
   >
     {
       video ?
-        <video
-          className={styles.video}
-          muted
-          loop
-          autoPlay
-        >
-          <source src={video} />
-        </video>
+        <div className={styles.videowrap}>
+          <video
+            className={styles.video}
+            muted
+            loop
+            autoPlay
+          >
+            <source src={video} />
+          </video>
+        </div>
         : null
     }
     {children}

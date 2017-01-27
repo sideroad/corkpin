@@ -15,7 +15,7 @@ const styles = require('../css/home.less');
 const Home = ({ route, push, user, configMode, loadingBoards }, { i18n, lang, fetcher, cookie }) =>
   <div>
     <Header homeURL={stringify(uris.pages.root, { lang })} />
-    <Background video="/images/herovideo.mp4" >
+    <Background image={require('../images/bg.png')} video="/images/herovideo.mp4" >
       <Signature
         lead={i18n.lead}
         find={user.id ? i18n.find_board : ''}
