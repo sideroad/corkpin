@@ -2,11 +2,11 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { stringify } from 'koiki';
-import { Cards } from 'koiki-ui';
 import uris from '../uris';
 import Header from '../components/Header';
 import Background from '../components/Background';
 import Signature from '../components/Signature';
+import Hero from '../components/Hero';
 import Footer from '../components/Footer';
 import { configMode } from '../reducers/board';
 
@@ -65,30 +65,22 @@ const Home = ({ route, push, user, configMode, loadingBoards }, { i18n, lang, fe
         <h1
           className={styles.header}
         >Corkpin for...</h1>
-        <Cards
-          className={styles.list}
-          hasSpace
-          theme="pop"
-          position="bottom"
-          nowrap={false}
-          clickable={false}
-          items={[
-            {
-              id: 'albums',
-              image: '/images/bg-corkboard.jpg',
-              title: 'Trip, party album. Make and share with your friends'
-            },
-            {
-              id: 'portfolio',
-              image: '/images/bg-corkboard.jpg',
-              title: 'Portfolio. Gather your favorite item photos'
-            },
-            {
-              id: 'greeting',
-              image: '/images/bg-corkboard.jpg',
-              title: 'Greeting. Post card and greeting all over the world'
-            }
-          ]}
+        <Hero
+          lead="Album"
+          description="Create trip, party alubum and share with your friends"
+          image={require('../images/signature-trip.png')}
+        />
+        <Hero
+          theme="sepia"
+          position="right"
+          lead="Portfolio"
+          description="Publish your favorite gathered item photos"
+          image={require('../images/signature-portfolio.png')}
+        />
+        <Hero
+          lead="Greeting"
+          description="Post greeting card all over the world"
+          image={require('../images/signature-greeting.png')}
         />
         <Footer privacyPolicyURL={stringify(uris.pages.privacy, { lang })} />
       </div>
