@@ -281,7 +281,7 @@ export default function (app) {
               .then((boards) => {
                 const promises = boards.map(
                   item =>
-                    fetch(`${apiBase}/apis/board/images?board=${item.id}&offset=0&limit=1`, {
+                    fetch(`${apiBase}/apis/board/images?board=${item.id}&offset=0&limit=1&url=*.png`, {
                       headers
                     })
                       .then(res => res.json())
