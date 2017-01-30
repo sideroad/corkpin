@@ -15,7 +15,9 @@ const styles = require('../css/home.less');
 const Home = ({ route, push, user, configMode, loadingBoards }, { i18n, lang, fetcher, cookie }) =>
   <div>
     <Header homeURL={stringify(uris.pages.root, { lang })} />
-    <Background image={require('../images/bg.png')} video="/images/herovideo.mp4" >
+    <Background
+      image={require('../images/heroimage.png')}
+    >
       <Signature
         lead={i18n.lead}
         find={user.id ? i18n.find_board : ''}
@@ -66,18 +68,20 @@ const Home = ({ route, push, user, configMode, loadingBoards }, { i18n, lang, fe
           className={styles.header}
         >Corkpin for...</h1>
         <Hero
+          color="pink"
           lead="Album"
           description="Create trip, party alubum and share with your friends"
           image={require('../images/signature-trip.png')}
         />
         <Hero
-          theme="sepia"
+          color="gray"
           position="right"
           lead="Portfolio"
           description="Publish your favorite gathered item photos"
           image={require('../images/signature-portfolio.png')}
         />
         <Hero
+          color="blue"
           lead="Greeting"
           description="Post greeting card all over the world"
           image={require('../images/signature-greeting.png')}

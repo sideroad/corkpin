@@ -6,7 +6,7 @@ const Hero = props =>
   <div
     className={`
       ${styles.hero}
-      ${styles[props.theme]}
+      ${styles[props.color]}
       ${styles[props.position]}
     `}
   >
@@ -30,12 +30,12 @@ Hero.propTypes = {
   lead: PropTypes.string.isRequired,
   description: PropTypes.string,
   image: PropTypes.string.isRequired,
-  theme: PropTypes.oneOf(['gray', 'sepia']),
+  color: PropTypes.oneOf(['blue', 'pink', 'yellow']),
   position: PropTypes.oneOf(['left', 'right']),
 };
 
 Hero.defaultProps = {
-  theme: 'gray',
+  color: 'blue',
   position: 'left',
 };
 

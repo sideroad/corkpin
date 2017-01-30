@@ -4,7 +4,6 @@ const styles = require('../css/background.less');
 
 const Background = ({ image, video, onMoveStart, onMoveEnd, onMove, children, overflow, blur }) =>
   <div
-    style={{ backgroundImage: `url(${image})`, overflow }}
     className={`${styles.background} ${blur ? styles.blur : ''}`}
     onMouseDown={(evt) => {
       onMoveStart(evt);
@@ -25,9 +24,15 @@ const Background = ({ image, video, onMoveStart, onMoveEnd, onMove, children, ov
       onMoveEnd(evt.touches[0]);
     }}
   >
-    {
-      video ?
-        <div className={styles.videowrap}>
+    <div
+      style={{
+        backgroundImage: image ? `url(${image})` : 'none',
+        overflow,
+      }}
+      className={`${styles.wrap} ${image ? styles.image : ''}`}
+    >
+      {
+        video ?
           <video
             className={styles.video}
             muted
@@ -36,9 +41,9 @@ const Background = ({ image, video, onMoveStart, onMoveEnd, onMove, children, ov
           >
             <source src={video} />
           </video>
-        </div>
         : null
-    }
+      }
+    </div>
     {children}
   </div>;
 

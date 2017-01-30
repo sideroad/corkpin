@@ -1,8 +1,8 @@
 @import "variables.less";
 
 .hero {
-  height: 50vh;
-  color: @kuronezu;
+  height: 75vh;
+  color: @sumi;
   position: relative;
   overflow: hidden;
 }
@@ -44,10 +44,14 @@
   }
 }
 
-.gray .background{
-  filter: contrast(0.4) sepia(100%) saturate(2) hue-rotate(190deg) brightness(130%) blur(2px);
+.blue .background{
+  filter: contrast(0.2) sepia(100%) saturate(2) hue-rotate(190deg) brightness(140%);
 }
 
-.sepia .background{
-  filter: contrast(0.4) sepia(100%) saturate(2) hue-rotate(280deg) brightness(130%) blur(2px);
+.pink .background{
+  filter: contrast(0.4) sepia(100%) saturate(2) hue-rotate(280deg) brightness(140%);
+}
+
+.gray .background{
+  filter: contrast(0.3) grayscale(100%) saturate(2) brightness(160%);
 }

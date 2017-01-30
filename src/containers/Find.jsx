@@ -18,7 +18,7 @@ const Find = ({
 }, { i18n, lang, fetcher }) => console.log(loadingBoards) ||
   <div className={styles.container}>
     <Header homeURL={stringify(uris.pages.root, { lang })} />
-    <Background image={require('../images/bg.png')} >
+    <Background>
       <Signature
         lead={i18n.find_to_meet}
         find={i18n.find_board}
