@@ -4,7 +4,7 @@ import { push } from 'react-router-redux';
 import { stringify } from 'koiki';
 import uris from '../uris';
 import Header from '../components/Header';
-import Background from '../components/Background';
+import Cover from '../components/Cover';
 import Signature from '../components/Signature';
 import Hero from '../components/Hero';
 import Footer from '../components/Footer';
@@ -15,7 +15,7 @@ const styles = require('../css/home.less');
 const Home = ({ route, push, user, configMode, loadingBoards }, { i18n, lang, fetcher, cookie }) =>
   <div>
     <Header homeURL={stringify(uris.pages.root, { lang })} />
-    <Background
+    <Cover
       image={require('../images/heroimage.png')}
     >
       <Signature
@@ -88,7 +88,7 @@ const Home = ({ route, push, user, configMode, loadingBoards }, { i18n, lang, fe
         />
         <Footer privacyPolicyURL={stringify(uris.pages.privacy, { lang })} />
       </div>
-    </Background>
+    </Cover>
   </div>;
 
 Home.propTypes = {

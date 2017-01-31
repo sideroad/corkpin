@@ -5,7 +5,7 @@ import { stringify } from 'koiki';
 import { Cards } from 'koiki-ui';
 import { asyncConnect } from 'redux-connect';
 import Header from '../components/Header';
-import Background from '../components/Background';
+import Cover from '../components/Cover';
 import Signature from '../components/Signature';
 import uris from '../uris';
 import { set } from '../reducers/album';
@@ -18,7 +18,7 @@ const Find = ({
 }, { i18n, lang, fetcher }) => console.log(loadingBoards) ||
   <div className={styles.container}>
     <Header homeURL={stringify(uris.pages.root, { lang })} />
-    <Background>
+    <Cover>
       <Signature
         lead={i18n.find_to_meet}
         find={i18n.find_board}
@@ -56,7 +56,7 @@ const Find = ({
           }
         }
       />
-    </Background>
+    </Cover>
   </div>;
 
 Find.propTypes = {

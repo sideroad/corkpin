@@ -2,8 +2,12 @@ import React, { PropTypes } from 'react';
 
 const styles = require('../css/background.less');
 
-const Background = ({ image, video, onMoveStart, onMoveEnd, onMove, children, overflow, blur }) =>
+const Background = ({ image, onMoveStart, onMoveEnd, onMove, children, overflow, blur }) =>
   <div
+    style={{
+      backgroundImage: `url(${image})`,
+      overflow,
+    }}
     className={`${styles.background} ${blur ? styles.blur : ''}`}
     onMouseDown={(evt) => {
       onMoveStart(evt);
@@ -24,32 +28,11 @@ const Background = ({ image, video, onMoveStart, onMoveEnd, onMove, children, ov
       onMoveEnd(evt.touches[0]);
     }}
   >
-    <div
-      style={{
-        backgroundImage: image ? `url(${image})` : 'none',
-        overflow,
-      }}
-      className={`${styles.wrap} ${image ? styles.image : ''}`}
-    >
-      {
-        video ?
-          <video
-            className={styles.video}
-            muted
-            loop
-            autoPlay
-          >
-            <source src={video} />
-          </video>
-        : null
-      }
-    </div>
     {children}
   </div>;
 
 Background.propTypes = {
-  image: PropTypes.string,
-  video: PropTypes.string,
+  image: PropTypes.string.isRequired,
   children: PropTypes.oneOfType([PropTypes.object, PropTypes.array]).isRequired,
   onMoveStart: PropTypes.func,
   onMove: PropTypes.func,
