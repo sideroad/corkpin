@@ -30,7 +30,7 @@ Hero.propTypes = {
   lead: PropTypes.string.isRequired,
   description: PropTypes.string,
   image: PropTypes.string.isRequired,
-  color: PropTypes.oneOf(['blue', 'pink', 'yellow']),
+  color: PropTypes.oneOf(['blue', 'pink', 'gray']),
   position: PropTypes.oneOf(['left', 'right']),
 };
 
