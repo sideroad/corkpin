@@ -2,14 +2,14 @@ import React, { PropTypes } from 'react';
 import { stringify } from 'koiki';
 import uris from '../uris';
 import Header from '../components/Header';
-import Background from '../components/Background';
+import Cover from '../components/Cover';
 
 const styles = require('../css/privacypolicy.less');
 
 const PrivacyPolicy = (props, { i18n, lang }) =>
   <div>
     <Header homeURL={stringify(uris.pages.root, { lang })} />
-    <Background image={require('../images/bg.png')} >
+    <Cover>
       <div className={styles.policy} >
         <header className={styles.header} >{i18n.privacy_policy}</header>
         <section className={styles.section} >
@@ -30,7 +30,7 @@ const PrivacyPolicy = (props, { i18n, lang }) =>
           </section>
         </section>
       </div>
-    </Background>
+    </Cover>
   </div>;
 
 PrivacyPolicy.contextTypes = {

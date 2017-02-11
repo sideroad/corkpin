@@ -5,10 +5,12 @@ import path from 'path';
 import fs from 'fs-extra';
 import isVideo from 'is-video';
 import _ from 'lodash';
+import im from 'imagemagick';
 
 import uris from '../uris';
 import config from '../config';
 
+const FILE_SIZE_LIMIT = 10000000;
 const upload = multer({ dest: './tmp/' });
 const apiBase = normalize(`${config.api.host}:${config.api.port}`);
 
@@ -107,8 +109,17 @@ export default function (app) {
     const paths = [];
     const promises = req.files.files.map(file => new Promise((resolve) => {
       const filepath = `${file.path}${path.extname(file.originalname)}`;
-      fs.move(file.path, filepath, () => resolve());
-      paths.push(path.parse(filepath).base);
+
+      if (FILE_SIZE_LIMIT < file.size && !isVideo(file.originalname)) {
+        im.convert([file.path, '-define', 'jpeg:extent=10MB', filepath], (err, stdout) => {
+          console.log(err, stdout);
+          paths.push(path.parse(filepath).base);
+          resolve();
+        });
+      } else {
+        fs.move(file.path, filepath, () => resolve());
+        paths.push(path.parse(filepath).base);
+      }
     }));
     Promise.all(promises).then(
       () => res.json({
@@ -162,7 +173,7 @@ export default function (app) {
                       resolve(body);
                     }, {
                       resource_type: isVideo(body.url) ? 'video' : 'auto',
-                      format: isVideo(body.url) ? undefined : 'png',
+                      format: isVideo(body.url) ? undefined : 'jpg',
                       tags: [body.board]
                     });
                   })
@@ -281,7 +292,7 @@ export default function (app) {
               .then((boards) => {
                 const promises = boards.map(
                   item =>
-                    fetch(`${apiBase}/apis/board/images?board=${item.id}&offset=0&limit=1&url=*.png`, {
+                    fetch(`${apiBase}/apis/board/images?board=${item.id}&offset=0&limit=1&url=*.jpg`, {
                       headers
                     })
                       .then(res => res.json())

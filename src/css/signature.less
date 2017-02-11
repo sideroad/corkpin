@@ -11,24 +11,27 @@
 .lead{
 	position: absolute;
 	color: @hai;
-	font-size: 2.5em;
 	margin-top: 0;
 	transition-property: font-size, top;
   transition-duration: 0.4s;
 	top: 35%;
 	width: 80%;
 	text-align: center;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .starting .lead {
-  color: @gofun;
+  font-size: 2.5em;
+  color: @sumi;
 }
 
 .control {
 	position: absolute;
 	top: 50%;
 	width: 80%;
-	transform: translateY(0%);
+  left: 50%;
+	transform: translateY(0%) translateX(-50%);
 	flex-wrap: wrap;
 	align-items: stretch;
 	display: flex;
@@ -78,11 +81,9 @@
 
 @keyframes move-to-top {
   0% {
-    font-size: 2.5em;
     top: 35%;
   }
   100% {
-    font-size: 2em;
     top: 10%;
   }
 }

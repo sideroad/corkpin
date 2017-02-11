@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 
-const styles = require('../css/background.less');
+const styles = require('../css/cover.less');
 
 const Cover = ({ image, video, children }) =>
   <div
