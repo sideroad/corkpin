@@ -19,7 +19,7 @@ export default {
       clientID: config.facebook.appId,
       clientSecret: config.facebook.secret,
       callbackURL: `${config.app.base}/auth/facebook/callback`,
-      profileFields: ['id', 'albums', 'photos', 'friends']
+      profileFields: ['id', 'friends']
     }, (accessToken, refreshToken, profile, cb) =>
       cb(null, { ...profile, token: accessToken })
     ));
@@ -42,10 +42,10 @@ export default {
       });
 
     app.get('/auth/facebook',
-      passport.authenticate('facebook', { scope: ['user_photos', 'user_videos', 'user_posts', 'user_friends'], session: true }));
+      passport.authenticate('facebook', { scope: ['user_friends'], session: true }));
 
     app.get('/auth/facebook/callback',
-      passport.authenticate('facebook', { scope: ['user_photos', 'user_videos', 'user_posts', 'user_friends'], session: true, failureRedirect: '/auth/facebook' }),
+      passport.authenticate('facebook', { scope: ['user_friends'], session: true, failureRedirect: '/auth/facebook' }),
       (req, res) => {
         res.redirect(req.cookies.redirect || '/');
       });

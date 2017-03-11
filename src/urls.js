@@ -112,43 +112,6 @@ export default {
       url: `${base}/bff/apis/board/backgrounds`
     }
   },
-  media: {
-    gets: {
-      url: 'https://graph.facebook.com/v2.8/me/photos',
-      after: (values, { body: res }) => Promise.resolve({
-        items: res.data.map(item => ({
-          id: item.id,
-          name: item.name,
-          image: item.source
-        })),
-        next: res.paging.next
-      }),
-      defaults: {
-        fields: 'source,description',
-        type: 'uploaded'
-      },
-      next: action => action.next
-    }
-  },
-  video: {
-    gets: {
-      url: 'https://graph.facebook.com/v2.8/me/videos',
-      after: (values, { body: res }) => Promise.resolve({
-        items: res.data.map(item => ({
-          id: item.id,
-          name: item.name,
-          image: item.picture,
-          video: item.source
-        })),
-        next: res.paging.next
-      }),
-      defaults: {
-        fields: 'source,description,picture',
-        type: 'uploaded'
-      },
-      next: action => action.next
-    }
-  },
   user: {
     gets: {
       url: 'https://graph.facebook.com/v2.8/me/friends',

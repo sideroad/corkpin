@@ -17,7 +17,6 @@ const CONFIG_MODE = 'board/CONFIG_MODE';
 const PHOTO_CONFIG_MODE = 'board/PHOTO_CONFIG_MODE';
 const DISPLAY_MODE = 'board/DISPLAY_MODE';
 const EDIT_MODE = 'board/EDIT_MODE';
-const ADD_MODE = 'board/ADD_MODE';
 const UPLOAD_MODE = 'board/UPLOAD_MODE';
 
 const initialState = {
@@ -130,13 +129,6 @@ export default function reducer(state = initialState, action = {}) {
         scale: 1
       };
     }
-    case ADD_MODE: {
-      return {
-        ...state,
-        mode: 'add',
-        scale: 1
-      };
-    }
     case UPLOAD_MODE: {
       return {
         ...state,
@@ -214,12 +206,6 @@ export function configMode() {
 export function editMode() {
   return {
     type: EDIT_MODE
-  };
-}
-
-export function addMode() {
-  return {
-    type: ADD_MODE
   };
 }
 

@@ -5,8 +5,6 @@ import image from './image';
 import board from './board';
 import hobby from './hobby';
 import album from './album';
-import media from './media';
-import video from './video';
 
 export default {
   hobby,
@@ -15,7 +13,5 @@ export default {
   image,
   user,
   background,
-  allow,
-  media,
-  video
+  allow
 };

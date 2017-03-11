@@ -21,6 +21,7 @@ const PhotoSettings = ({
             <Input
               key={name}
               icon="fa-sticky-note"
+              className={styles.title}
               value={name}
               onBlur={
                 evt => onChangePhotoName(evt.target.value)
