@@ -1,7 +1,6 @@
 import React, { PropTypes, Component } from 'react';
 import __ from 'lodash';
-import { Button, Input, Chips } from 'koiki-ui';
-import Selector from '../components/Selector';
+import { Button, Input, Chips, Selectbox } from 'koiki-ui';
 import Modal from '../components/Modal';
 
 const styles = require('../css/settings.less');
@@ -20,6 +19,8 @@ class Settings extends Component {
       display,
       userId,
       name,
+      font,
+      fonts,
       background,
       backgrounds,
       allows,
@@ -27,6 +28,7 @@ class Settings extends Component {
       users,
       onChangeBoardName,
       onChangeBoardBackground,
+      onChangeBoardFont,
       onAddUser,
       onDeleteUser,
       onClose,
@@ -54,13 +56,36 @@ class Settings extends Component {
           </dd>
           <dt>Background Image</dt>
           <dd>
-            <Selector
-              selected={background.id}
-              items={backgrounds.map(background => ({
+            <Selectbox
+              selected={{
                 ...background,
+                value: background.id,
+                text: background.id,
+                image: `/images/bg-${background.id}.jpg`,
+              }}
+              options={backgrounds.map(background => ({
+                ...background,
+                value: background.id,
+                text: background.id,
                 image: `/images/bg-${background.id}.jpg`
               }))}
               onSelect={onChangeBoardBackground}
+            />
+          </dd>
+          <dt>Font family</dt>
+          <dd>
+            <Selectbox
+              selected={{
+                ...font,
+                value: font.code,
+                text: font.name
+              }}
+              options={fonts.map(font => ({
+                ...font,
+                value: font.code,
+                text: font.name
+              }))}
+              onSelect={onChangeBoardFont}
             />
           </dd>
           <dt>People who can see this board</dt>
@@ -127,12 +152,15 @@ Settings.propTypes = {
   display: PropTypes.bool.isRequired,
   userId: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
+  font: PropTypes.object.isRequired,
+  fonts: PropTypes.array.isRequired,
   background: PropTypes.object.isRequired,
   backgrounds: PropTypes.array.isRequired,
   allows: PropTypes.array.isRequired,
   onSearchUser: PropTypes.func.isRequired,
   onChangeBoardName: PropTypes.func.isRequired,
   onChangeBoardBackground: PropTypes.func.isRequired,
+  onChangeBoardFont: PropTypes.func.isRequired,
   onAddUser: PropTypes.func.isRequired,
   onDeleteUser: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,

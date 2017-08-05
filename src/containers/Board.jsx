@@ -66,6 +66,7 @@ class Board extends Component {
       images,
       image,
       font,
+      fonts,
       params,
       scale,
       moveStart,
@@ -405,6 +406,8 @@ class Board extends Component {
           display={mode === 'config'}
           userId={userId}
           name={name}
+          font={font}
+          fonts={fonts}
           background={background}
           backgrounds={backgrounds}
           allows={allows}
@@ -429,6 +432,18 @@ class Board extends Component {
               .update({
                 id: params.id,
                 background: item.id
+              })
+              .then(
+                () => fetcher.board.get({
+                  id: params.id
+                })
+              )
+          }
+          onChangeBoardFont={
+            item => fetcher.board
+              .update({
+                id: params.id,
+                font: item.id
               })
               .then(
                 () => fetcher.board.get({
@@ -512,6 +527,7 @@ Board.propTypes = {
   backgrounds: PropTypes.array.isRequired,
   name: PropTypes.string.isRequired,
   font: PropTypes.object.isRequired,
+  fonts: PropTypes.array.isRequired,
   scale: PropTypes.number.isRequired,
   params: PropTypes.object.isRequired,
   changeScale: PropTypes.func.isRequired,
@@ -553,6 +569,7 @@ const connected = connect(
     mode: state.board.mode,
     name: state.board.item.name,
     font: state.board.item.font,
+    fonts: state.font.items,
     scale: state.board.scale,
     moving: state.board.moving,
     panX: state.board.panX,
@@ -602,6 +619,9 @@ const asynced = asyncConnect([{
       .get({
         id
       })
+    );
+    promises.push(fetcher.font
+      .gets()
     );
     promises.push(fetcher.image
       .gets({
