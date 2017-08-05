@@ -74,7 +74,7 @@ class Photo extends Component {
               style={{
                 width: `${width}px`,
                 height: `${height}px`,
-                backgroundImage: `url(${image})`
+                backgroundImage: image ? `url(${image})` : 'none'
               }}
             />
         }

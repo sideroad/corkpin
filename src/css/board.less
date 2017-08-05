@@ -21,7 +21,7 @@
 .edit {
 	bottom: 100px;
 	right: 30px;
-	font-size: 45px;
+	font-size: 40px;
 }
 
 .config {
@@ -33,26 +33,27 @@
 .centering {
 	bottom: 170px;
 	right: 30px;
-	font-size: 45px;
+	font-size: 40px;
 }
 
-.adding {
-	bottom: 310px;
+.commenting {
+	bottom: 240px;
 	right: 30px;
-	font-size: 45px;
+	font-size: 40px;
 }
 
 .uploading {
-	bottom: 240px;
+	bottom: 310px;
 	right: 30px;
-	font-size: 45px;
+	font-size: 40px;
 }
+
 
 .config,
 .edit,
 .centering,
-.adding,
-.uploading {
+.uploading,
+.commenting {
 	position: absolute;
 	border: none;
 	i {
@@ -64,8 +65,8 @@
 }
 
 .centering,
-.adding,
-.uploading {
+.uploading,
+.commenting {
 	i {
 		color: @tsuyukusa;
 	}
@@ -74,26 +75,26 @@
 .config:hover,
 .edit:hover,
 .centering:hover,
-.adding:hover,
 .uploading:hover,
+.commenting:hover,
 .edit.editing{
 	i {
 		opacity: 1;
 		color: @tsuyukusa;
-		transform: rotateY(360deg) scale(1.5);
+		transform: rotateY(360deg) scale(1.25);
 	}
 }
 
 .centering,
-.adding,
-.uploading{
+.uploading,
+.commenting{
 	transform: scale(0);
 	opacity: 0;
 }
 
 .centering.editing,
-.adding.editing,
-.uploading.editing{
+.uploading.editing,
+.commenting.editing{
 	transform: scale(1);
 	opacity: 0.8;
 	transition-property: opacity, transform;

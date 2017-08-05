@@ -53,6 +53,16 @@ export default {
       credentials: 'include'
     }
   },
+  font: {
+    gets: {
+      url: `${base}/bff/apis/board/fonts`,
+      credentials: 'include'
+    },
+    get: {
+      url: `${base}/bff/apis/board/fonts/:id`,
+      credentials: 'include'
+    }
+  },
   image: {
     gets: {
       url: `${base}/bff/apis/board/images`,

@@ -1,3 +1,4 @@
+import font from './font';
 import allow from './allow';
 import background from './background';
 import user from './user';
@@ -13,5 +14,6 @@ export default {
   image,
   user,
   background,
-  allow
+  allow,
+  font
 };

@@ -40,6 +40,7 @@ class Selector extends Component {
         </button>
         <Modal
           isOpen
+          contentLabel="selector"
           onRequestClose={onClose}
           className={`${styles.modal} ${isOpen ? styles.show : styles.hide}`}
           overlayClassName={`${styles.overlay} ${isOpen ? styles.showOverlay : styles.hideOverlay}`}

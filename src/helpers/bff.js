@@ -157,25 +157,29 @@ export default function (app) {
                       }
                       file = path.join('tmp', file);
                     }
-                    cloudinary.uploader.upload(file, (result) => {
-                      if (body.fromUploader) {
-                        fs.remove(file);
-                      }
-                      if (result.error) {
-                        console.error(result.error);
-                        reject({
-                          file: result.error
-                        });
-                        return;
-                      }
-                      body.url = result.secure_url;
-                      body.cloudinary = isVideo(body.url) ? '' : `${result.public_id}.${result.format}`;
+                    if (file) {
+                      cloudinary.uploader.upload(file, (result) => {
+                        if (body.fromUploader) {
+                          fs.remove(file);
+                        }
+                        if (result.error) {
+                          console.error(result.error);
+                          reject({
+                            file: result.error
+                          });
+                          return;
+                        }
+                        body.url = result.secure_url;
+                        body.cloudinary = isVideo(body.url) ? '' : `${result.public_id}.${result.format}`;
+                        resolve(body);
+                      }, {
+                        resource_type: isVideo(body.url) ? 'video' : 'auto',
+                        format: isVideo(body.url) ? undefined : 'jpg',
+                        tags: [body.board]
+                      });
+                    } else {
                       resolve(body);
-                    }, {
-                      resource_type: isVideo(body.url) ? 'video' : 'auto',
-                      format: isVideo(body.url) ? undefined : 'jpg',
-                      tags: [body.board]
-                    });
+                    }
                   })
               )
               .then(
@@ -232,10 +236,26 @@ export default function (app) {
                   headers
                 })
               )
-              .then(res => res.json())
-              .then((board) => {
-                res.json(board);
-              })
+              .then(
+                res => res.json()
+              )
+              .then(
+                board => fetch(`${apiBase}/apis/board/fonts/${board.font.id}`, {
+                  method: 'GET',
+                  headers
+                })
+                  .then(
+                    res => res.json()
+                  )
+                  .then(
+                    (font) => {
+                      res.json({
+                        ...board,
+                        font
+                      });
+                    }
+                  )
+              )
               .catch(err => console.log(req.originalUrl, err) || res.status(503).json({}));
           }
         },

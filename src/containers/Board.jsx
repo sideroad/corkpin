@@ -64,7 +64,8 @@ class Board extends Component {
       mode,
       name,
       images,
-      photo,
+      image,
+      font,
       params,
       scale,
       moveStart,
@@ -95,6 +96,7 @@ class Board extends Component {
     const { fetcher, lang } = this.context;
     return (
       <div className={moving ? styles.grabbing : styles.grab}>
+        <link href={`https://fonts.googleapis.com/css?family=${font.code}`} rel="stylesheet" />
         <Background
           blur={mode === 'config' || mode === 'add' || mode === 'upload' || mode === 'photo-config'}
           image={`/images/bg-${background.id}.jpg`}
@@ -129,7 +131,8 @@ class Board extends Component {
             <div
               className={styles.container}
               style={{
-                transform: `translate(${(panX * -1) - (defaultX * -1)}px, ${(panY * -1) - (defaultY * -1)}px)`
+                transform: `translate(${(panX * -1) - (defaultX * -1)}px, ${(panY * -1) - (defaultY * -1)}px)`,
+                fontFamily: font.name
               }}
             >
               {
@@ -254,7 +257,13 @@ class Board extends Component {
                     }
                     onClickConfig={
                       () => {
-                        photoConfigMode(image);
+                        fetcher.image
+                          .get({
+                            id: image.id
+                          })
+                          .then(
+                            () => photoConfigMode()
+                          );
                       }
                     }
                   />
@@ -270,6 +279,38 @@ class Board extends Component {
           }
         >
           <i className="fa fa-picture-o" />
+        </button>
+        <button
+          className={`${styles.commenting} ${mode === 'edit' ? styles.editing : ''}`}
+          onClick={
+            () => {
+              fetcher.image
+                .save({
+                  board: params.id,
+                  photo: v4(),
+                  name: '',
+                  url: '',
+                  isVideo: false,
+                  fromUploader: false,
+                  x: __.random(document.body.clientWidth / -4, document.body.clientWidth / 4),
+                  y: __.random(document.body.clientHeight / -4, document.body.clientHeight / 4),
+                  z: getMaxZ(images) + 1,
+                  width: 200,
+                  height: 30
+                })
+                .then(res =>
+                  fetcher.image
+                    .get({
+                      id: res.body.id
+                    })
+                )
+                .then(() =>
+                  photoConfigMode()
+                );
+            }
+          }
+        >
+          <i className="fa fa-commenting" />
         </button>
         <button
           className={`${styles.centering} ${mode === 'edit' ? styles.editing : ''}`}
@@ -436,13 +477,18 @@ class Board extends Component {
         />
         <PhotoSettings
           display={mode === 'photo-config'}
-          name={photo.name}
+          name={image.name}
           onChangePhotoName={
             name => fetcher.image
               .update({
-                id: photo.id,
+                id: image.id,
                 name
               })
+              .then(
+                () => fetcher.image.get({
+                  id: image.id
+                })
+              )
               .then(
                 () => fetcher.image.gets({
                   board: params.id
@@ -465,6 +511,7 @@ Board.propTypes = {
   images: PropTypes.array.isRequired,
   backgrounds: PropTypes.array.isRequired,
   name: PropTypes.string.isRequired,
+  font: PropTypes.object.isRequired,
   scale: PropTypes.number.isRequired,
   params: PropTypes.object.isRequired,
   changeScale: PropTypes.func.isRequired,
@@ -482,7 +529,7 @@ Board.propTypes = {
   panY: PropTypes.number.isRequired,
   defaultX: PropTypes.number.isRequired,
   defaultY: PropTypes.number.isRequired,
-  photo: PropTypes.object.isRequired,
+  image: PropTypes.object.isRequired,
   background: PropTypes.object.isRequired,
   moving: PropTypes.bool.isRequired,
   allows: PropTypes.array.isRequired,
@@ -505,6 +552,7 @@ const connected = connect(
   state => ({
     mode: state.board.mode,
     name: state.board.item.name,
+    font: state.board.item.font,
     scale: state.board.scale,
     moving: state.board.moving,
     panX: state.board.panX,
@@ -512,7 +560,7 @@ const connected = connect(
     defaultX: state.board.defaultX,
     defaultY: state.board.defaultY,
     background: state.board.item.background,
-    photo: state.board.photo,
+    image: state.image.item,
     images: state.image.items,
     backgrounds: state.background.items,
     user: state.user.item,

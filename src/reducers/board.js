@@ -33,9 +33,6 @@ const initialState = {
   panStartX: 0,
   panStartY: 0,
   mode: 'display',
-  photo: {
-    name: ''
-  }
 };
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
@@ -145,7 +142,6 @@ export default function reducer(state = initialState, action = {}) {
     case PHOTO_CONFIG_MODE: {
       return {
         ...state,
-        photo: action.photo,
         mode: 'photo-config'
       };
     }
@@ -221,9 +217,8 @@ export function uploadMode() {
   };
 }
 
-export function photoConfigMode(photo) {
+export function photoConfigMode() {
   return {
     type: PHOTO_CONFIG_MODE,
-    photo
   };
 }

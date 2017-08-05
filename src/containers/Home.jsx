@@ -32,7 +32,8 @@ const Home = ({ route, push, user, configMode, loadingBoards }, { i18n, lang, fe
             .save({
               name: 'Untitled',
               user: user.id,
-              background: 'corkboard'
+              background: 'corkboard',
+              font: 'metrophobic'
             })
             .then(
               res =>

@@ -34,6 +34,7 @@ class Settings extends Component {
     } = this.props;
     return (
       <Modal
+        contentLabel="settings"
         display={display}
         className={styles.settings}
         onClose={onClose}

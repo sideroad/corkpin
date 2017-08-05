@@ -8,7 +8,6 @@ import Header from '../components/Header';
 import Cover from '../components/Cover';
 import Signature from '../components/Signature';
 import uris from '../uris';
-import { set } from '../reducers/album';
 import { displayMode } from '../reducers/board';
 
 const styles = require('../css/find.less');
@@ -84,7 +83,6 @@ const connected = connect(
   }),
   {
     push,
-    set,
     displayMode
   }
 )(Find);

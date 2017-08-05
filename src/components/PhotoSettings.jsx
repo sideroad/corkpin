@@ -33,9 +33,13 @@ const PhotoSettings = ({
 
 PhotoSettings.propTypes = {
   display: PropTypes.bool.isRequired,
-  name: PropTypes.string.isRequired,
+  name: PropTypes.string,
   onChangePhotoName: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
+};
+
+PhotoSettings.defaultProps = {
+  name: ''
 };
 
 export default PhotoSettings;
