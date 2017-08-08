@@ -297,7 +297,7 @@ class Board extends Component {
                   y: __.random(document.body.clientHeight / -4, document.body.clientHeight / 4),
                   z: getMaxZ(images) + 1,
                   width: 200,
-                  height: 30
+                  height: 0
                 })
                 .then(res =>
                   fetcher.image
