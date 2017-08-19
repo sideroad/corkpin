@@ -45,6 +45,11 @@ server({
   statics: config.app.statics,
   handlers: {
     error: error => console.error('ROUTER ERROR:', pretty.render(error))
+  },
+  manifest: {
+    name: config.app.title,
+    description: config.app.description,
+    background_color: '#EAEDF7',
   }
 });
 
